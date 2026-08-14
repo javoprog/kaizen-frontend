@@ -147,6 +147,7 @@ export function GoalWorkspacePage() {
       <Tabs selectedKey={tab} onSelectionChange={(key) => setTab(key as WorkspaceTab)} className="workspace-tabs">
         <Tabs.ListContainer>
           <Tabs.List aria-label="Goal workspace sections">
+            <Tabs.Indicator />
             <Tabs.Tab id="overview">Overview</Tabs.Tab>
             <Tabs.Tab id="roadmap">Roadmap</Tabs.Tab>
             <Tabs.Tab id="tasks">Tasks <span className="tab-count">{remaining}</span></Tabs.Tab>

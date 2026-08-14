@@ -88,6 +88,7 @@ export function AuthPage() {
             >
               <Tabs.ListContainer>
                 <Tabs.List aria-label="Authentication mode">
+                  <Tabs.Indicator />
                   <Tabs.Tab id="register">Create account</Tabs.Tab>
                   <Tabs.Tab id="login">Log in</Tabs.Tab>
                 </Tabs.List>
