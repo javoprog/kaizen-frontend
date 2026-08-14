@@ -46,29 +46,10 @@ a { color: inherit; text-decoration: none; }
 p, h1, h2, h3 { margin-top: 0; }
 h1, h2, h3, strong { overflow-wrap: anywhere; }
 
-/* Form Controls & Outer Field Containers */
-.textfield, .select, .date-picker, [data-slot="root"], [data-slot="field"] { 
-  min-width: 0; 
-  gap: 7px; 
-  background: transparent !important; 
-  border: none !important; 
-  box-shadow: none !important; 
-  outline: none !important; 
-}
-
-.label, label, [data-slot="label"] { 
-  font-size: 13px; 
-  font-weight: 550; 
-  color: #e6e1ee; 
-  line-height: 1.35; 
-}
-
-.description, [data-slot="description"] { 
-  font-size: 11px; 
-  color: var(--muted); 
-  line-height: 1.5; 
-  margin-top: 3px; 
-}
+/* Form Controls & Labels */
+.textfield, .select, .date-picker { min-width: 0; gap: 7px; }
+.label, label { font-size: 13px; font-weight: 550; color: #e6e1ee; line-height: 1.35; }
+.description { font-size: 11px; color: var(--muted); line-height: 1.5; margin-top: 3px; }
 
 .input, 
 .textarea, 
@@ -79,81 +60,41 @@ input[type="email"],
 input[type="password"],
 input[type="number"],
 textarea,
-select,
-[data-slot="input"],
-[data-slot="textarea"],
-[data-slot="trigger"],
-[data-slot="group"] {
+select {
   min-width: 0;
-  background: var(--control-bg) !important;
-  border: 1px solid var(--control-border) !important;
-  border-radius: var(--control-radius) !important;
-  color: #f7f6fb !important;
+  background: var(--control-bg);
+  border: 1px solid var(--control-border);
+  border-radius: var(--control-radius);
+  color: #f7f6fb;
   font: inherit;
-  transition: border-color 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease !important;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.25);
 }
 
 .input, 
+.select__trigger, 
 .date-input-group,
 input[type="text"],
 input[type="email"],
 input[type="password"],
 input[type="number"],
-select,
-[data-slot="input"],
-[data-slot="group"] {
+select {
   height: var(--control-height);
   min-height: var(--control-height);
   padding: 0 14px;
 }
 
-/* Select Trigger & Vertical Centering */
-.select__trigger, [data-slot="trigger"] {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  width: 100% !important;
-  height: var(--control-height) !important;
-  min-height: var(--control-height) !important;
-  padding: 0 14px !important;
-  line-height: 1 !important;
-  cursor: pointer !important;
-}
-
-.select__value, [data-slot="value"], .select__trigger > span {
-  display: inline-flex !important;
-  align-items: center !important;
-  height: 100% !important;
-  line-height: 1 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  color: #f7f6fb !important;
-  font-size: 13px !important;
-}
-
-.select__indicator, [data-slot="indicator"], .select__trigger svg {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  flex-shrink: 0 !important;
-  color: #9c95a8 !important;
-  margin-left: 8px !important;
-  transition: transform 0.16s ease !important;
-}
-
 .textarea, 
-textarea, 
-[data-slot="textarea"] {
+textarea {
   min-height: 104px;
   padding: 12px 14px;
   line-height: 1.55;
   resize: vertical;
 }
 
-::placeholder, [data-slot="placeholder"] {
-  color: var(--placeholder) !important;
-  opacity: 1 !important;
+::placeholder {
+  color: var(--placeholder);
+  opacity: 1;
 }
 
 .input:hover,
@@ -162,87 +103,32 @@ textarea,
 .date-input-group:hover,
 input:hover,
 textarea:hover,
-select:hover,
-[data-slot="input"]:hover,
-[data-slot="textarea"]:hover,
-[data-slot="trigger"]:hover,
-[data-slot="group"]:hover {
-  border-color: var(--control-border-hover) !important;
-  background-color: #100e17 !important;
+select:hover {
+  border-color: var(--control-border-hover);
+  background-color: #100e17;
 }
 
 .input:focus,
 .textarea:focus,
 .select__trigger:focus,
-.select__trigger[data-focused="true"],
-.select__trigger[data-focus-visible="true"],
 .date-input-group:focus-within,
 input:focus,
 textarea:focus,
-select:focus,
-[data-slot="input"]:focus,
-[data-slot="textarea"]:focus,
-[data-slot="trigger"]:focus,
-[data-slot="trigger"][data-focused="true"],
-[data-slot="trigger"][data-focus-visible="true"],
-[data-slot="group"]:focus-within {
-  border-color: var(--violet-soft) !important;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), 0 0 0 2px rgba(139, 109, 255, 0.45) !important;
-  outline: none !important;
+select:focus {
+  border-color: var(--violet-soft);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), 0 0 0 2px rgba(139, 109, 255, 0.45);
+  outline: none;
 }
 
 .input:disabled,
 .textarea:disabled,
-.select__trigger[data-disabled="true"],
 input:disabled,
 textarea:disabled,
-select:disabled,
-[data-disabled="true"] {
-  opacity: 0.45 !important;
-  cursor: not-allowed !important;
-  background: #0e0c13 !important;
-  border-color: #221d2d !important;
-}
-
-/* Select Popover / ListBox Options */
-[data-slot="popover"], .select-popover, [data-slot="content"]:has([role="listbox"]) {
-  background: var(--surface-raised) !important;
-  border: 1px solid var(--border-raised) !important;
-  border-radius: 14px !important;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6) !important;
-  padding: 6px !important;
-  overflow: hidden !important;
-  z-index: 100 !important;
-}
-
-[data-slot="listbox"], [role="listbox"] {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 3px !important;
-  outline: none !important;
-}
-
-[data-slot="item"], [role="option"] {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  min-height: 38px !important;
-  padding: 8px 12px !important;
-  border-radius: 9px !important;
-  color: #e6e1ee !important;
-  font-size: 13px !important;
-  cursor: pointer !important;
-  transition: background 0.14s ease, color 0.14s ease !important;
-}
-
-[data-slot="item"]:hover, 
-[role="option"]:hover, 
-[data-slot="item"][data-focused="true"], 
-[role="option"][data-focused="true"],
-[data-slot="item"][data-selected="true"],
-[role="option"][aria-selected="true"] {
-  background: rgba(139, 109, 255, 0.18) !important;
-  color: #ffffff !important;
+select:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  background: #0e0c13;
+  border-color: #221d2d;
 }
 
 ::selection { background: rgba(139, 109, 255, .35); }
