@@ -205,18 +205,20 @@ select:disabled,
 }
 
 /* Select Popover / ListBox Options */
-[data-slot="popover"], .select-popover {
+[data-slot="popover"], .select-popover, [data-slot="content"]:has([role="listbox"]) {
   background: var(--surface-raised) !important;
   border: 1px solid var(--border-raised) !important;
-  border-radius: var(--control-radius) !important;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6) !important;
   padding: 6px !important;
+  overflow: hidden !important;
   z-index: 100 !important;
 }
 
 [data-slot="listbox"], [role="listbox"] {
-  display: grid !important;
-  gap: 2px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 3px !important;
   outline: none !important;
 }
 
@@ -226,7 +228,7 @@ select:disabled,
   justify-content: space-between !important;
   min-height: 38px !important;
   padding: 8px 12px !important;
-  border-radius: 8px !important;
+  border-radius: 9px !important;
   color: #e6e1ee !important;
   font-size: 13px !important;
   cursor: pointer !important;
@@ -239,7 +241,7 @@ select:disabled,
 [role="option"][data-focused="true"],
 [data-slot="item"][data-selected="true"],
 [role="option"][aria-selected="true"] {
-  background: rgba(139, 109, 255, 0.16) !important;
+  background: rgba(139, 109, 255, 0.18) !important;
   color: #ffffff !important;
 }
 
@@ -376,15 +378,53 @@ select:disabled,
 .planner-notice { margin-bottom: 24px; }
 .plan-list { display: grid; gap: 15px; }
 .plan-milestone { background: var(--surface) !important; border: 1px solid var(--border) !important; border-radius: var(--card-radius) !important; }
-.plan-milestone > [data-slot="header"] { display: grid; grid-template-columns: 42px minmax(0, 1fr) auto; gap: 16px; align-items: start; padding: 22px 22px 16px; }
-.milestone-number { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 12px; color: #b7a8ff; background: rgba(139,109,255,.1); font-size: 11px; font-weight: 750; }
-.plan-milestone-fields { min-width: 0; display: grid; gap: 14px; }
+.plan-milestone > [data-slot="header"] { 
+  display: grid; 
+  grid-template-columns: 38px minmax(0, 1fr) auto; 
+  gap: 16px; 
+  align-items: start; 
+  padding: 24px 24px 18px; 
+}
+.milestone-number { 
+  width: 38px; 
+  height: 38px; 
+  margin-top: 18px;
+  display: grid; 
+  place-items: center; 
+  border-radius: 12px; 
+  color: #b7a8ff; 
+  background: rgba(139,109,255,.12); 
+  border: 1px solid rgba(139,109,255,.2);
+  font-size: 12px; 
+  font-weight: 750; 
+}
+.plan-milestone-fields { 
+  min-width: 0; 
+  display: grid; 
+  gap: 18px; 
+}
 .plan-milestone-fields textarea { min-height: 66px; resize: vertical; }
-.plan-edit-field { min-width: 0; display: grid; gap: 6px; }
-.plan-field-label { color: #77717f; font-size: 10px; font-weight: 700; letter-spacing: .075em; line-height: 1; text-transform: uppercase; }
-.reorder-actions, .task-reorder-actions { display: flex; gap: 3px; }
+.plan-edit-field { 
+  min-width: 0; 
+  display: grid; 
+  gap: 7px; 
+}
+.plan-field-label { 
+  color: var(--muted); 
+  font-size: 11px; 
+  font-weight: 700; 
+  letter-spacing: .08em; 
+  line-height: 1; 
+  text-transform: uppercase; 
+}
+.reorder-actions { 
+  display: flex; 
+  gap: 4px; 
+  margin-top: 18px;
+}
+.task-reorder-actions { display: flex; gap: 3px; }
 .icon-action-hint { display: inline-flex; }
-.plan-milestone > [data-slot="content"] { padding: 0 22px 22px 80px; }
+.plan-milestone > [data-slot="content"] { padding: 0 24px 24px 78px; }
 .plan-tasks { display: grid; gap: 10px; }
 .plan-task-row { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 11px; padding: 14px; border-radius: var(--control-radius); background: #100f14; border: 1px solid #25222c; }
 .plan-task-description, .task-plan-meta { grid-column: 1 / -1; }
