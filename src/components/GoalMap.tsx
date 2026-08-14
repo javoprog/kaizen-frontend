@@ -26,9 +26,9 @@ interface GoalMapData extends Record<string, unknown> {
 
 type GoalNode = Node<GoalMapData>
 
-function MapNode({ data }: NodeProps<GoalNode>) {
+function MapNode({ data, selected }: NodeProps<GoalNode>) {
   return (
-    <div className={`goal-map-node map-${data.kind} node-${data.status.toLowerCase()}`}>
+    <div className={`goal-map-node map-${data.kind} node-${data.status.toLowerCase()} ${selected ? 'node-selected' : ''}`}>
       <Handle type="target" position={Position.Left} />
       <div className="map-node-icon">
         {data.status === 'COMPLETED' ? <Check size={14} /> : data.kind === 'goal' ? <Target size={15} /> : <Flag size={14} />}

@@ -10,6 +10,7 @@ interface FieldProps {
   description?: string
   required?: boolean
   autoComplete?: string
+  variant?: 'primary' | 'secondary'
 }
 
 export function FormField({
@@ -22,6 +23,7 @@ export function FormField({
   description,
   required,
   autoComplete,
+  variant = 'primary',
 }: FieldProps) {
   return (
     <TextField isRequired={required} fullWidth>
@@ -33,6 +35,7 @@ export function FormField({
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
         autoComplete={autoComplete}
+        variant={variant}
         fullWidth
       />
       {description && <Description>{description}</Description>}
@@ -47,6 +50,7 @@ export function FormTextarea({
   onChange,
   placeholder,
   description,
+  variant = 'primary',
 }: Omit<FieldProps, 'type' | 'required' | 'autoComplete'>) {
   return (
     <TextField fullWidth>
@@ -56,6 +60,7 @@ export function FormTextarea({
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
+        variant={variant}
         fullWidth
       />
       {description && <Description>{description}</Description>}

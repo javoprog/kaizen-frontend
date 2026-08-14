@@ -62,9 +62,9 @@ export function GoalCreatePage() {
             required
           />
           <KaizenDatePicker value={date} onChange={setDate} />
-          <Disclosure>
-            <Disclosure.Heading>
-              <Disclosure.Trigger>
+          <Disclosure className="advanced-disclosure">
+            <Disclosure.Heading className="advanced-disclosure-heading">
+              <Disclosure.Trigger className="advanced-disclosure-trigger">
                 Advanced details <Disclosure.Indicator><ChevronDown size={16} /></Disclosure.Indicator>
               </Disclosure.Trigger>
             </Disclosure.Heading>

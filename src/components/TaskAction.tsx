@@ -26,6 +26,7 @@ export function TaskAction({
         </div>
       </div>
       <Button
+        size="sm"
         variant={task.completed ? 'secondary' : 'primary'}
         isDisabled={task.completed}
         isPending={completing}

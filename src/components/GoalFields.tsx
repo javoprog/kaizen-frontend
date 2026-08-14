@@ -61,15 +61,17 @@ export function KaizenSelect({
   onChange,
   options,
   description,
+  variant = 'primary',
 }: {
   label: string
   value: string
   onChange: (value: string) => void
   options: Array<{ value: string; label: string }>
   description?: string
+  variant?: 'primary' | 'secondary'
 }) {
   return (
-    <Select value={value} onChange={(key) => onChange(String(key))} placeholder="Select one" fullWidth>
+    <Select value={value} onChange={(key) => onChange(String(key))} placeholder="Select one" variant={variant} fullWidth>
       <Label>{label}</Label>
       <Select.Trigger>
         <Select.Value />

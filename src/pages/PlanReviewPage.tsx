@@ -10,7 +10,7 @@ import {
   Sparkles,
   Trash2,
 } from 'lucide-react'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ErrorAlert } from '../components/Feedback'
 import { KaizenSelect } from '../components/GoalFields'
@@ -27,6 +27,10 @@ interface EditableTask {
 interface EditableMilestone extends Omit<SuggestedMilestone, 'tasks'> {
   clientId: string
   tasks: EditableTask[]
+}
+
+function IconActionHint({ label, children }: { label: string; children: ReactNode }) {
+  return <span className="icon-action-hint" title={label}>{children}</span>
 }
 
 function editable(milestones: SuggestedMilestone[]): EditableMilestone[] {
@@ -177,21 +181,29 @@ export function PlanReviewPage() {
             <Card.Header>
               <div className="milestone-number">{String(milestoneIndex + 1).padStart(2, '0')}</div>
               <div className="plan-milestone-fields">
-                <Input
-                  aria-label={`Milestone ${milestoneIndex + 1} title`}
-                  value={milestone.title}
-                  onChange={(event) => updateMilestone(milestoneIndex, { title: event.target.value })}
-                />
-                <TextArea
-                  aria-label={`Milestone ${milestoneIndex + 1} description`}
-                  value={milestone.description}
-                  onChange={(event) => updateMilestone(milestoneIndex, { description: event.target.value })}
-                />
+                <div className="plan-edit-field">
+                  <span className="plan-field-label">Milestone</span>
+                  <Input
+                    variant="secondary"
+                    aria-label={`Milestone ${milestoneIndex + 1} title`}
+                    value={milestone.title}
+                    onChange={(event) => updateMilestone(milestoneIndex, { title: event.target.value })}
+                  />
+                </div>
+                <div className="plan-edit-field">
+                  <span className="plan-field-label">Outcome</span>
+                  <TextArea
+                    variant="secondary"
+                    aria-label={`Milestone ${milestoneIndex + 1} description`}
+                    value={milestone.description}
+                    onChange={(event) => updateMilestone(milestoneIndex, { description: event.target.value })}
+                  />
+                </div>
               </div>
               <div className="reorder-actions">
-                <Button isIconOnly variant="ghost" aria-label="Move milestone up" isDisabled={milestoneIndex === 0} onPress={() => moveMilestone(milestoneIndex, -1)}><ArrowUp size={15} /></Button>
-                <Button isIconOnly variant="ghost" aria-label="Move milestone down" isDisabled={milestoneIndex === plan.length - 1} onPress={() => moveMilestone(milestoneIndex, 1)}><ArrowDown size={15} /></Button>
-                <Button isIconOnly variant="danger-soft" aria-label="Delete milestone" isDisabled={plan.length === 1} onPress={() => setPlan((current) => current.filter((_, index) => index !== milestoneIndex))}><Trash2 size={15} /></Button>
+                <IconActionHint label="Move milestone up"><Button isIconOnly size="sm" variant="ghost" aria-label="Move milestone up" isDisabled={milestoneIndex === 0} onPress={() => moveMilestone(milestoneIndex, -1)}><ArrowUp size={15} /></Button></IconActionHint>
+                <IconActionHint label="Move milestone down"><Button isIconOnly size="sm" variant="ghost" aria-label="Move milestone down" isDisabled={milestoneIndex === plan.length - 1} onPress={() => moveMilestone(milestoneIndex, 1)}><ArrowDown size={15} /></Button></IconActionHint>
+                <IconActionHint label="Delete milestone"><Button isIconOnly size="sm" variant="danger-soft" aria-label="Delete milestone" isDisabled={plan.length === 1} onPress={() => setPlan((current) => current.filter((_, index) => index !== milestoneIndex))}><Trash2 size={15} /></Button></IconActionHint>
               </div>
             </Card.Header>
             <Card.Content>
@@ -199,31 +211,40 @@ export function PlanReviewPage() {
                 {milestone.tasks.map((task, taskIndex) => (
                   <div key={task.clientId} className="plan-task-row">
                     <GripVertical size={16} className="drag-hint" />
-                    <Input
-                      aria-label={`Task ${taskIndex + 1} title`}
-                      value={task.title}
-                      onChange={(event) => updateTask(milestoneIndex, taskIndex, { title: event.target.value })}
-                    />
+                    <div className="plan-task-title plan-edit-field">
+                      <span className="plan-field-label">Action</span>
+                      <Input
+                        variant="secondary"
+                        aria-label={`Task ${taskIndex + 1} title`}
+                        value={task.title}
+                        onChange={(event) => updateTask(milestoneIndex, taskIndex, { title: event.target.value })}
+                      />
+                    </div>
                     <div className="task-plan-meta">
                       <KaizenSelect
                         label="Difficulty"
                         value={task.difficulty}
                         onChange={(difficulty) => updateTask(milestoneIndex, taskIndex, { difficulty: difficulty as Difficulty })}
                         options={['TINY', 'EASY', 'MEDIUM', 'HARD', 'EPIC'].map((value) => ({ value, label: value.charAt(0) + value.slice(1).toLowerCase() }))}
+                        variant="secondary"
                       />
-                      <Input
-                        type="number"
-                        aria-label="Estimated minutes"
-                        min={5}
-                        max={480}
-                        value={String(task.durationMinutes)}
-                        onChange={(event) => updateTask(milestoneIndex, taskIndex, { durationMinutes: Number(event.target.value) })}
-                      />
+                      <div className="task-plan-duration plan-edit-field">
+                        <span className="plan-field-label">Minutes</span>
+                        <Input
+                          variant="secondary"
+                          type="number"
+                          aria-label="Estimated minutes"
+                          min={5}
+                          max={480}
+                          value={String(task.durationMinutes)}
+                          onChange={(event) => updateTask(milestoneIndex, taskIndex, { durationMinutes: Number(event.target.value) })}
+                        />
+                      </div>
                     </div>
                     <div className="task-reorder-actions">
-                      <Button isIconOnly variant="ghost" aria-label="Move task up" isDisabled={taskIndex === 0} onPress={() => moveTask(milestoneIndex, taskIndex, -1)}><ArrowUp size={14} /></Button>
-                      <Button isIconOnly variant="ghost" aria-label="Move task down" isDisabled={taskIndex === milestone.tasks.length - 1} onPress={() => moveTask(milestoneIndex, taskIndex, 1)}><ArrowDown size={14} /></Button>
-                      <Button isIconOnly variant="ghost" aria-label="Delete task" isDisabled={milestone.tasks.length === 1} onPress={() => updateMilestone(milestoneIndex, { tasks: milestone.tasks.filter((_, index) => index !== taskIndex) })}><Trash2 size={14} /></Button>
+                      <IconActionHint label="Move task up"><Button isIconOnly size="sm" variant="ghost" aria-label="Move task up" isDisabled={taskIndex === 0} onPress={() => moveTask(milestoneIndex, taskIndex, -1)}><ArrowUp size={14} /></Button></IconActionHint>
+                      <IconActionHint label="Move task down"><Button isIconOnly size="sm" variant="ghost" aria-label="Move task down" isDisabled={taskIndex === milestone.tasks.length - 1} onPress={() => moveTask(milestoneIndex, taskIndex, 1)}><ArrowDown size={14} /></Button></IconActionHint>
+                      <IconActionHint label="Delete task"><Button isIconOnly size="sm" variant="danger-soft" aria-label="Delete task" isDisabled={milestone.tasks.length === 1} onPress={() => updateMilestone(milestoneIndex, { tasks: milestone.tasks.filter((_, index) => index !== taskIndex) })}><Trash2 size={14} /></Button></IconActionHint>
                     </div>
                   </div>
                 ))}
