@@ -144,7 +144,7 @@ export function GoalWorkspacePage() {
 
       {error && <ErrorAlert message={error} />}
 
-      <Tabs variant="secondary" selectedKey={tab} onSelectionChange={(key) => setTab(key as WorkspaceTab)} className="workspace-tabs">
+      <Tabs selectedKey={tab} onSelectionChange={(key) => setTab(key as WorkspaceTab)} className="workspace-tabs">
         <Tabs.ListContainer>
           <Tabs.List aria-label="Goal workspace sections">
             <Tabs.Tab id="overview">Overview</Tabs.Tab>
