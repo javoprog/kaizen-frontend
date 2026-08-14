@@ -30,6 +30,9 @@
   --control-height: 42px;
   --control-radius: 12px;
   --card-radius: 18px;
+  --color-default: #15131c;
+  --color-segment: #353143;
+  --color-segment-foreground: #ffffff;
 }
 
 .dark, [data-theme="dark"] {
