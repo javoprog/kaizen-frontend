@@ -1,4 +1,4 @@
-import { Button, Card, ProgressBar } from '@heroui/react'
+import { Button, Card, Progress } from '../components/ui'
 import type { DateValue } from '@internationalized/date'
 import { AnimatePresence, motion } from 'motion/react'
 import {
@@ -91,9 +91,7 @@ export function OnboardingPage() {
         <Brand />
         <span>Step {step} of 3</span>
       </header>
-      <ProgressBar value={(step / 3) * 100} aria-label={`Onboarding step ${step} of 3`} className="onboarding-progress">
-        <ProgressBar.Track><ProgressBar.Fill /></ProgressBar.Track>
-      </ProgressBar>
+      <Progress value={(step / 3) * 100} aria-label={`Onboarding step ${step} of 3`} className="onboarding-progress" />
 
       <div className="onboarding-stage">
         <AnimatePresence mode="wait">
@@ -122,7 +120,9 @@ export function OnboardingPage() {
                   <Button
                     key={item.label}
                     variant={category === item.label ? 'primary' : 'secondary'}
-                    onPress={() => setCategory(item.label)}
+                    size="lg"
+                    className="justify-start"
+                    onClick={() => setCategory(item.label)}
                   >
                     <item.icon size={17} /> {item.label}
                   </Button>
@@ -131,8 +131,8 @@ export function OnboardingPage() {
               <Button
                 variant="primary"
                 size="lg"
-                isDisabled={!intent.trim()}
-                onPress={() => setStep(2)}
+                disabled={!intent.trim()}
+                onClick={() => setStep(2)}
               >
                 Continue <ArrowRight size={18} />
               </Button>
@@ -155,16 +155,17 @@ export function OnboardingPage() {
                   <Button
                     key={item}
                     variant={struggles.includes(item) ? 'primary' : 'secondary'}
-                    onPress={() => toggleStruggle(item)}
-                    className="struggle-option"
+                    size="lg"
+                    onClick={() => toggleStruggle(item)}
+                    className="struggle-option justify-start"
                   >
                     <span className="selection-dot" /> {item}
                   </Button>
                 ))}
               </div>
               <div className="step-actions">
-                <Button variant="ghost" onPress={() => setStep(1)}><ArrowLeft size={17} /> Back</Button>
-                <Button variant="primary" size="lg" onPress={() => setStep(3)}>
+                <Button variant="ghost" onClick={() => setStep(1)}><ArrowLeft size={17} /> Back</Button>
+                <Button variant="primary" size="lg" onClick={() => setStep(3)}>
                   Shape my goal <ArrowRight size={18} />
                 </Button>
               </div>
@@ -195,8 +196,8 @@ export function OnboardingPage() {
               </Card>
               {error && <ErrorAlert message={error} />}
               <div className="step-actions">
-                <Button variant="ghost" onPress={() => setStep(2)}><ArrowLeft size={17} /> Back</Button>
-                <Button variant="primary" size="lg" isPending={submitting} onPress={() => void createGoal()}>
+                <Button variant="ghost" onClick={() => setStep(2)}><ArrowLeft size={17} /> Back</Button>
+                <Button variant="primary" size="lg" loading={submitting} onClick={() => void createGoal()}>
                   {!submitting && <Sparkles size={18} />} Break down my goal
                 </Button>
               </div>

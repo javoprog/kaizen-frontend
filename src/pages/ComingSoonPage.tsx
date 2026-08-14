@@ -1,4 +1,4 @@
-import { Button, Card } from '@heroui/react'
+import { Button, Card } from '../components/ui'
 import { ArrowLeft, Construction } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
@@ -11,7 +11,7 @@ export function ComingSoonPage({ title }: { title: string }) {
           <span className="empty-icon"><Construction size={23} /></span>
           <h1>{title}</h1>
           <p>This area is intentionally unavailable in the primary-flow prototype. No placeholder data is being shown.</p>
-          <Button variant="secondary" onPress={() => navigate('/')}><ArrowLeft size={17} /> Return to Today</Button>
+          <Button variant="secondary" onClick={() => navigate('/')}><ArrowLeft size={17} /> Return to Today</Button>
         </Card.Content>
       </Card>
     </div>

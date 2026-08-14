@@ -5,12 +5,15 @@ import '@xyflow/react/dist/style.css'
 import './index.css'
 import App from './App.tsx'
 import { AuthProvider } from './state/AuthContext.tsx'
+import { TooltipProvider } from './components/ui'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <App />
+        <TooltipProvider delayDuration={350}>
+          <App />
+        </TooltipProvider>
       </AuthProvider>
     </BrowserRouter>
   </StrictMode>,

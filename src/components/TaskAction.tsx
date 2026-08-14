@@ -1,4 +1,4 @@
-import { Button } from '@heroui/react'
+import { Button } from './ui'
 import { Check, Circle } from 'lucide-react'
 import type { Task } from '../lib/types'
 import { DifficultyPill, TimePill, XpPill } from './StatusPill'
@@ -28,9 +28,9 @@ export function TaskAction({
       <Button
         size="sm"
         variant={task.completed ? 'secondary' : 'primary'}
-        isDisabled={task.completed}
-        isPending={completing}
-        onPress={() => onComplete(task)}
+        disabled={task.completed}
+        loading={completing}
+        onClick={() => onComplete(task)}
       >
         {task.completed ? 'Done' : 'Complete'}
       </Button>

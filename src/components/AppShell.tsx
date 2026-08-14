@@ -1,4 +1,4 @@
-import { Button } from '@heroui/react'
+import { Button } from './ui'
 import {
   BarChart3,
   BrainCircuit,
@@ -32,9 +32,8 @@ export function AppShell() {
           <Brand />
           <Button
             variant="primary"
-            fullWidth
-            onPress={() => navigate('/goals/new')}
-            className="new-goal-button"
+            onClick={() => navigate('/goals/new')}
+            className="new-goal-button w-full"
           >
             <Plus size={17} /> New goal
           </Button>
@@ -70,10 +69,10 @@ export function AppShell() {
               <span>Level {user?.level ?? 1}</span>
             </div>
             <Button
-              isIconOnly
+              size="icon"
               variant="ghost"
               aria-label="Log out"
-              onPress={() => void logout()}
+              onClick={() => void logout()}
             >
               <LogOut size={16} />
             </Button>
@@ -83,7 +82,7 @@ export function AppShell() {
 
       <header className="mobile-header">
         <Brand />
-        <Button isIconOnly variant="ghost" aria-label="New goal" onPress={() => navigate('/goals/new')}>
+        <Button size="icon" variant="ghost" aria-label="New goal" onClick={() => navigate('/goals/new')}>
           <Plus size={20} />
         </Button>
       </header>

@@ -1,4 +1,4 @@
-import { Button, Card, Disclosure } from '@heroui/react'
+import { Button, Card, Disclosure } from '../components/ui'
 import type { DateValue } from '@internationalized/date'
 import { ArrowLeft, ChevronDown, Sparkles } from 'lucide-react'
 import { useState } from 'react'
@@ -51,7 +51,7 @@ export function GoalCreatePage() {
 
   return (
     <div className="page narrow-page">
-      <Button variant="ghost" onPress={() => navigate(-1)} className="back-button">
+      <Button variant="ghost" onClick={() => navigate(-1)} className="back-button">
         <ArrowLeft size={17} /> Back
       </Button>
       <div className="page-heading create-heading">
@@ -70,14 +70,14 @@ export function GoalCreatePage() {
             required
           />
           <KaizenDatePicker value={date} onChange={setDate} />
-          <Disclosure className="advanced-disclosure">
-            <Disclosure.Heading className="advanced-disclosure-heading">
-              <Disclosure.Trigger className="advanced-disclosure-trigger">
+          <Disclosure>
+            <Disclosure.Heading>
+              <Disclosure.Trigger>
                 Advanced details <Disclosure.Indicator><ChevronDown size={16} /></Disclosure.Indicator>
               </Disclosure.Trigger>
             </Disclosure.Heading>
             <Disclosure.Content>
-              <Disclosure.Body className="advanced-fields">
+              <Disclosure.Body>
                 <FormTextarea
                   label="Why this matters"
                   name="description"
@@ -156,16 +156,16 @@ export function GoalCreatePage() {
           <Button
             variant="primary"
             size="lg"
-            fullWidth
-            isDisabled={
+            className="w-full"
+            disabled={
               !title.trim() ||
               (progressStrategy === 'METRIC' &&
                 (currentValue === '' || targetValue === '' ||
                   !Number.isFinite(Number(currentValue)) ||
                   !Number.isFinite(Number(targetValue))))
             }
-            isPending={submitting}
-            onPress={() => void create()}
+            loading={submitting}
+            onClick={() => void create()}
           >
             {!submitting && <Sparkles size={18} />} Break down goal
           </Button>

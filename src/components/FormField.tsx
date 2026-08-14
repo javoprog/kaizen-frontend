@@ -1,4 +1,5 @@
-import { Description, Input, Label, TextArea, TextField } from '@heroui/react'
+import { Input } from './ui/input'
+import { Textarea } from './ui/textarea'
 
 interface FieldProps {
   label: string
@@ -11,6 +12,7 @@ interface FieldProps {
   required?: boolean
   autoComplete?: string
   variant?: 'primary' | 'secondary'
+  rows?: number
 }
 
 export function FormField({
@@ -26,9 +28,10 @@ export function FormField({
   variant = 'primary',
 }: FieldProps) {
   return (
-    <TextField isRequired={required} fullWidth>
-      <Label>{label}</Label>
+    <div className="textfield">
+      <label className="label" htmlFor={name}>{label}{required && <span aria-hidden="true"> *</span>}</label>
       <Input
+        id={name}
         name={name}
         type={type}
         value={value}
@@ -36,10 +39,10 @@ export function FormField({
         placeholder={placeholder}
         autoComplete={autoComplete}
         variant={variant}
-        fullWidth
+        required={required}
       />
-      {description && <Description>{description}</Description>}
-    </TextField>
+      {description && <p className="description">{description}</p>}
+    </div>
   )
 }
 
@@ -51,19 +54,21 @@ export function FormTextarea({
   placeholder,
   description,
   variant = 'primary',
+  rows,
 }: Omit<FieldProps, 'type' | 'required' | 'autoComplete'>) {
   return (
-    <TextField fullWidth>
-      <Label>{label}</Label>
-      <TextArea
+    <div className="textfield">
+      <label className="label" htmlFor={name}>{label}</label>
+      <Textarea
+        id={name}
         name={name}
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
         variant={variant}
-        fullWidth
+        rows={rows}
       />
-      {description && <Description>{description}</Description>}
-    </TextField>
+      {description && <p className="description">{description}</p>}
+    </div>
   )
 }

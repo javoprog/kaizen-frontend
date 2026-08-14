@@ -1,4 +1,4 @@
-import { Alert, Button, Card, Input, Spinner, TextArea } from '@heroui/react'
+import { Alert, Button, Card, Input, Spinner, TextArea, Tooltip, TooltipContent, TooltipTrigger } from '../components/ui'
 import {
   ArrowDown,
   ArrowLeft,
@@ -41,7 +41,12 @@ interface EditableMilestone {
 }
 
 function IconActionHint({ label, children }: { label: string; children: ReactNode }) {
-  return <span className="icon-action-hint" title={label}>{children}</span>
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipContent>{label}</TooltipContent>
+    </Tooltip>
+  )
 }
 
 function editableSuggestion(milestones: SuggestedMilestone[]): EditableMilestone[] {
@@ -254,7 +259,7 @@ export function PlanReviewPage({ mode = 'draft' }: { mode?: 'draft' | 'edit' }) 
   return (
     <div className="page plan-page">
       <div className="plan-topbar">
-        <Button variant="ghost" onPress={() => navigate(-1)}><ArrowLeft size={17} /> Back</Button>
+        <Button variant="ghost" onClick={() => navigate(-1)}><ArrowLeft size={17} /> Back</Button>
         <span className="plan-status"><span /> {isEditing ? 'Approved plan · changes apply when saved' : 'Draft · nothing changes until you approve'}</span>
       </div>
       <div className="page-heading plan-heading">
@@ -294,6 +299,7 @@ export function PlanReviewPage({ mode = 'draft' }: { mode?: 'draft' | 'edit' }) 
                     <span className="plan-field-label">Outcome</span>
                     <TextArea
                       variant="secondary"
+                      rows={3}
                       aria-label={`Milestone ${milestoneIndex + 1} description`}
                       value={milestone.description}
                       onChange={(event) => updateMilestone(milestoneIndex, { description: event.target.value })}
@@ -301,9 +307,9 @@ export function PlanReviewPage({ mode = 'draft' }: { mode?: 'draft' | 'edit' }) 
                   </div>
                 </div>
                 <div className="reorder-actions">
-                  <IconActionHint label="Move milestone up"><Button isIconOnly size="sm" variant="ghost" aria-label="Move milestone up" isDisabled={milestoneIndex === 0} onPress={() => moveMilestone(milestoneIndex, -1)}><ArrowUp size={15} /></Button></IconActionHint>
-                  <IconActionHint label="Move milestone down"><Button isIconOnly size="sm" variant="ghost" aria-label="Move milestone down" isDisabled={milestoneIndex === plan.length - 1} onPress={() => moveMilestone(milestoneIndex, 1)}><ArrowDown size={15} /></Button></IconActionHint>
-                  <IconActionHint label={containsCompletedWork ? 'Completed work keeps this milestone in the plan' : 'Delete milestone'}><Button isIconOnly size="sm" variant="danger-soft" aria-label="Delete milestone" isDisabled={plan.length === 1 || containsCompletedWork} onPress={() => setPlan((current) => current.filter((_, index) => index !== milestoneIndex))}><Trash2 size={15} /></Button></IconActionHint>
+                  <IconActionHint label="Move milestone up"><Button size="icon-sm" variant="ghost" aria-label="Move milestone up" disabled={milestoneIndex === 0} onClick={() => moveMilestone(milestoneIndex, -1)}><ArrowUp size={15} /></Button></IconActionHint>
+                  <IconActionHint label="Move milestone down"><Button size="icon-sm" variant="ghost" aria-label="Move milestone down" disabled={milestoneIndex === plan.length - 1} onClick={() => moveMilestone(milestoneIndex, 1)}><ArrowDown size={15} /></Button></IconActionHint>
+                  <IconActionHint label={containsCompletedWork ? 'Completed work keeps this milestone in the plan' : 'Delete milestone'}><Button size="icon-sm" variant="destructive-ghost" aria-label="Delete milestone" disabled={plan.length === 1 || containsCompletedWork} onClick={() => setPlan((current) => current.filter((_, index) => index !== milestoneIndex))}><Trash2 size={15} /></Button></IconActionHint>
                 </div>
               </Card.Header>
               <Card.Content className="plan-milestone-content">
@@ -342,7 +348,7 @@ export function PlanReviewPage({ mode = 'draft' }: { mode?: 'draft' | 'edit' }) 
                           onChange={(difficulty) => updateTask(milestoneIndex, taskIndex, { difficulty: difficulty as Difficulty })}
                           options={['TINY', 'EASY', 'MEDIUM', 'HARD', 'EPIC'].map((value) => ({ value, label: value.charAt(0) + value.slice(1).toLowerCase() }))}
                           variant="secondary"
-                          isDisabled={task.completed}
+                          disabled={task.completed}
                         />
                         <div className="plan-edit-field">
                           <span className="plan-field-label">Deadline</span>
@@ -368,15 +374,15 @@ export function PlanReviewPage({ mode = 'draft' }: { mode?: 'draft' | 'edit' }) 
                         </div>
                       </div>
                       <div className="task-reorder-actions">
-                        <IconActionHint label="Move task up"><Button isIconOnly size="sm" variant="ghost" aria-label="Move task up" isDisabled={taskIndex === 0} onPress={() => moveTask(milestoneIndex, taskIndex, -1)}><ArrowUp size={14} /></Button></IconActionHint>
-                        <IconActionHint label="Move task down"><Button isIconOnly size="sm" variant="ghost" aria-label="Move task down" isDisabled={taskIndex === milestone.tasks.length - 1} onPress={() => moveTask(milestoneIndex, taskIndex, 1)}><ArrowDown size={14} /></Button></IconActionHint>
-                        <IconActionHint label={task.completed ? 'Completed actions cannot be deleted' : 'Delete task'}><Button isIconOnly size="sm" variant="danger-soft" aria-label="Delete task" isDisabled={task.completed} onPress={() => updateMilestone(milestoneIndex, { tasks: milestone.tasks.filter((_, index) => index !== taskIndex) })}><Trash2 size={14} /></Button></IconActionHint>
+                        <IconActionHint label="Move task up"><Button size="icon-sm" variant="ghost" aria-label="Move task up" disabled={taskIndex === 0} onClick={() => moveTask(milestoneIndex, taskIndex, -1)}><ArrowUp size={14} /></Button></IconActionHint>
+                        <IconActionHint label="Move task down"><Button size="icon-sm" variant="ghost" aria-label="Move task down" disabled={taskIndex === milestone.tasks.length - 1} onClick={() => moveTask(milestoneIndex, taskIndex, 1)}><ArrowDown size={14} /></Button></IconActionHint>
+                        <IconActionHint label={task.completed ? 'Completed actions cannot be deleted' : 'Delete task'}><Button size="icon-sm" variant="destructive-ghost" aria-label="Delete task" disabled={task.completed} onClick={() => updateMilestone(milestoneIndex, { tasks: milestone.tasks.filter((_, index) => index !== taskIndex) })}><Trash2 size={14} /></Button></IconActionHint>
                       </div>
                     </div>
                   ))}
                   <Button
                     variant="ghost"
-                    onPress={() => updateMilestone(milestoneIndex, { tasks: [...milestone.tasks, newTask()] })}
+                    onClick={() => updateMilestone(milestoneIndex, { tasks: [...milestone.tasks, newTask()] })}
                   >
                     <Plus size={16} /> Add action
                   </Button>
@@ -389,12 +395,12 @@ export function PlanReviewPage({ mode = 'draft' }: { mode?: 'draft' | 'edit' }) 
 
       <div className="plan-footer">
         <div className="plan-footer-actions">
-          <Button variant="secondary" onPress={addMilestone}><Plus size={16} /> Add milestone</Button>
-          {!isEditing && <Button variant="ghost" onPress={() => void load()}><RefreshCw size={16} /> Regenerate</Button>}
+          <Button variant="secondary" onClick={addMilestone}><Plus size={16} /> Add milestone</Button>
+          {!isEditing && <Button variant="ghost" onClick={() => void load()}><RefreshCw size={16} /> Regenerate</Button>}
         </div>
         <div>
           <span>{plan.length} milestones · {plan.reduce((sum, item) => sum + item.tasks.length, 0)} actions</span>
-          <Button variant="primary" size="lg" isDisabled={invalidPlan} isPending={saving} onPress={() => void save()}>
+          <Button variant="primary" size="lg" disabled={invalidPlan} loading={saving} onClick={() => void save()}>
             {!saving && (isEditing ? <Save size={18} /> : <ArrowRight size={18} />)} {isEditing ? 'Save plan' : 'Approve this plan'}
           </Button>
         </div>

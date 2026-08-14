@@ -1,4 +1,4 @@
-import { Button, Modal } from '@heroui/react'
+import { Button, Modal } from './ui'
 import { motion } from 'motion/react'
 import { Award, Check, Sparkles, TrendingUp } from 'lucide-react'
 import type { Reward } from '../lib/types'
@@ -48,7 +48,7 @@ export function RewardModal({ reward, onClose }: { reward: Reward | null; onClos
                   ))}
                 </Modal.Body>
                 <Modal.Footer>
-                  <Button variant="primary" fullWidth onPress={onClose}>Keep moving</Button>
+                  <Button variant="primary" className="w-full" onClick={onClose}>Keep moving</Button>
                 </Modal.Footer>
           </>
         </Modal.Dialog>

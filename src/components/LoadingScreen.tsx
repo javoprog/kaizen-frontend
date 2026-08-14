@@ -1,5 +1,5 @@
-import { Spinner } from '@heroui/react'
 import { Brand } from './Brand'
+import { Spinner } from './ui'
 
 export function LoadingScreen({ label = 'Loading your progress' }: { label?: string }) {
   return (

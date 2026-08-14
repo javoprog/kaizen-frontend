@@ -1,4 +1,4 @@
-import { Button, Card, Tabs } from '@heroui/react'
+import { Button, Card, Tabs } from '../components/ui'
 import { formatDistanceToNow } from 'date-fns'
 import { AnimatePresence, motion } from 'motion/react'
 import {
@@ -113,9 +113,9 @@ export function GoalWorkspacePage() {
   return (
     <div className="page workspace-page">
       <div className="workspace-topbar">
-        <Button variant="ghost" onPress={() => navigate('/goals')}><ArrowLeft size={17} /> All goals</Button>
+        <Button variant="ghost" onClick={() => navigate('/goals')}><ArrowLeft size={17} /> All goals</Button>
         <div className="workspace-actions">
-          <Button variant="secondary" onPress={() => navigate(`/goals/${goal.id}/edit-plan`)}><Pencil size={16} /> Edit plan</Button>
+          <Button variant="secondary" onClick={() => navigate(`/goals/${goal.id}/edit-plan`)}><Pencil size={16} /> Edit plan</Button>
           <div className="workspace-status">
             <StatusPill label={goal.health.label} tone={goal.health.tone} />
             <span>{goal.status.toLowerCase()}</span>
@@ -145,12 +145,12 @@ export function GoalWorkspacePage() {
       {error && <ErrorAlert message={error} />}
 
       <Tabs variant="secondary" selectedKey={tab} onSelectionChange={(key) => setTab(key as WorkspaceTab)} className="workspace-tabs">
-        <Tabs.ListContainer className="workspace-tab-shell">
-          <Tabs.List aria-label="Goal workspace sections" className="workspace-tab-list">
-            <Tabs.Tab id="overview" className="workspace-tab-item">Overview</Tabs.Tab>
-            <Tabs.Tab id="roadmap" className="workspace-tab-item">Roadmap</Tabs.Tab>
-            <Tabs.Tab id="tasks" className="workspace-tab-item">Tasks <span className="tab-count">{remaining}</span></Tabs.Tab>
-            <Tabs.Tab id="insights" className="workspace-tab-item">Insights</Tabs.Tab>
+        <Tabs.ListContainer>
+          <Tabs.List aria-label="Goal workspace sections">
+            <Tabs.Tab id="overview">Overview</Tabs.Tab>
+            <Tabs.Tab id="roadmap">Roadmap</Tabs.Tab>
+            <Tabs.Tab id="tasks">Tasks <span className="tab-count">{remaining}</span></Tabs.Tab>
+            <Tabs.Tab id="insights">Insights</Tabs.Tab>
           </Tabs.List>
         </Tabs.ListContainer>
 
@@ -181,9 +181,9 @@ export function GoalWorkspacePage() {
                         />
                         <Button
                           variant="primary"
-                          isPending={updatingMetric}
-                          isDisabled={metricValue === '' || !Number.isFinite(Number(metricValue))}
-                          onPress={() => void updateMetric()}
+                          loading={updatingMetric}
+                          disabled={metricValue === '' || !Number.isFinite(Number(metricValue))}
+                          onClick={() => void updateMetric()}
                         >
                           Update progress
                         </Button>
@@ -213,8 +213,8 @@ export function GoalWorkspacePage() {
                       <Button
                         variant="primary"
                         size="lg"
-                        isPending={completing === goal.recommendedTask.id}
-                        onPress={() => void completeTask(goal.recommendedTask!)}
+                        loading={completing === goal.recommendedTask.id}
+                        onClick={() => void completeTask(goal.recommendedTask!)}
                       >
                         <CheckCircle2 size={18} /> Complete action
                       </Button>
@@ -224,7 +224,7 @@ export function GoalWorkspacePage() {
 
                 <div className="section-heading">
                   <div><span>Current phase</span><h2>{currentMilestone?.title || 'All milestones complete'}</h2></div>
-                  <Button variant="ghost" onPress={() => setTab('roadmap')}>Open map</Button>
+                  <Button variant="ghost" onClick={() => setTab('roadmap')}>Open map</Button>
                 </div>
                 {currentMilestone && (
                   <Card className="milestone-card">

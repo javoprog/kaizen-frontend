@@ -1,4 +1,4 @@
-import { Button, Card } from '@heroui/react'
+import { Button, Card } from '../components/ui'
 import { Area, AreaChart, ResponsiveContainer, Tooltip as ChartTooltip, YAxis } from 'recharts'
 import { motion } from 'motion/react'
 import {
@@ -91,7 +91,7 @@ export function DashboardPage() {
           <h1>{greeting}, {firstName(data.user.displayName || data.user.username)}.</h1>
           <p>{data.today.totalCompleted > 0 ? `You have completed ${data.today.totalCompleted} action${data.today.totalCompleted === 1 ? '' : 's'} today.` : 'One meaningful action is enough to create momentum.'}</p>
         </div>
-        <Button variant="primary" onPress={() => navigate('/goals/new')}><Plus size={17} /> New goal</Button>
+        <Button variant="primary" onClick={() => navigate('/goals/new')}><Plus size={17} /> New goal</Button>
       </header>
 
       {error && <ErrorAlert message={error} />}
@@ -123,10 +123,10 @@ export function DashboardPage() {
               <div className="score-sparkline" aria-label="Kaizen Score trend">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={data.scoreHistory}>
-                    <defs><linearGradient id="scoreFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#8b6dff" stopOpacity={0.38} /><stop offset="100%" stopColor="#8b6dff" stopOpacity={0} /></linearGradient></defs>
+                    <defs><linearGradient id="scoreFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="var(--brand)" stopOpacity={0.24} /><stop offset="100%" stopColor="var(--brand)" stopOpacity={0} /></linearGradient></defs>
                     <YAxis domain={[0, 100]} hide />
-                    <ChartTooltip contentStyle={{ background: '#17151d', border: '1px solid #2b2735', borderRadius: 12 }} labelFormatter={(value) => String(value)} />
-                    <Area type="monotone" dataKey="score" stroke="#9b87ff" strokeWidth={2} fill="url(#scoreFill)" />
+                    <ChartTooltip contentStyle={{ background: 'var(--popover)', border: '1px solid var(--border)', borderRadius: 'var(--kaizen-radius-lg)' }} labelFormatter={(value) => String(value)} />
+                    <Area type="monotone" dataKey="score" stroke="var(--brand)" strokeWidth={2} fill="url(#scoreFill)" />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
@@ -152,7 +152,7 @@ export function DashboardPage() {
                     <DifficultyPill difficulty={data.focus.difficulty} />
                     <XpPill xp={data.focus.xpReward} />
                   </div>
-                  <Button variant="primary" size="lg" isPending={completing} onPress={() => void completeFocus(data.focus!)}>
+                  <Button variant="primary" size="lg" loading={completing} onClick={() => void completeFocus(data.focus!)}>
                     <CheckCircle2 size={18} /> Complete this action
                   </Button>
                 </Card.Content>
@@ -165,14 +165,14 @@ export function DashboardPage() {
                 <span className="empty-icon"><Target size={22} /></span>
                 <h3>Give Kaizen a direction</h3>
                 <p>Create a goal and approve its plan. Your most useful next action will appear here.</p>
-                <Button variant="primary" onPress={() => navigate('/goals/new')}>Create a goal <ArrowRight size={17} /></Button>
+                <Button variant="primary" onClick={() => navigate('/goals/new')}>Create a goal <ArrowRight size={17} /></Button>
               </Card.Content>
             </Card>
           )}
 
           <div className="section-heading habits-heading">
             <div><span>Today’s habits</span><h2>Keep your rhythm visible</h2></div>
-            <Button variant="ghost" onPress={() => navigate('/habits')}>View habits <ArrowRight size={16} /></Button>
+            <Button variant="ghost" onClick={() => navigate('/habits')}>View habits <ArrowRight size={16} /></Button>
           </div>
           {data.todayHabits.length ? (
             <div className="dashboard-habits">
@@ -182,23 +182,35 @@ export function DashboardPage() {
                     <span className="dashboard-habit-icon">{habit.completedToday ? <CheckCircle2 size={18} /> : <Repeat2 size={18} />}</span>
                     <div><strong>{habit.title}</strong><span>{habit.goal?.title || (habit.scheduleType === 'DAILY' ? 'Every day' : 'Scheduled habit')}</span></div>
                     <div className="dashboard-habit-meta"><XpPill xp={habit.xpReward} />{habit.streak > 0 && <span className="meta-pill streak-pill"><Flame size={13} /> {habit.streak}</span>}</div>
-                    <Button size="sm" variant={habit.completedToday ? 'ghost' : 'primary'} isDisabled={habit.completedToday} isPending={completingHabit === habit.id} onPress={() => void completeHabit(habit)}>{habit.completedToday ? 'Done' : 'Complete'}</Button>
+                    <Button size="sm" variant={habit.completedToday ? 'ghost' : 'primary'} disabled={habit.completedToday} loading={completingHabit === habit.id} onClick={() => void completeHabit(habit)}>{habit.completedToday ? 'Done' : 'Complete'}</Button>
                   </Card.Content>
                 </Card>
               ))}
             </div>
           ) : (
-            <Card className="dashboard-habits-empty"><Card.Content><Repeat2 size={18} /><span>No habits scheduled today.</span><Button variant="ghost" size="sm" onPress={() => navigate('/habits')}>Manage habits</Button></Card.Content></Card>
+            <Card className="dashboard-habits-empty"><Card.Content><Repeat2 size={18} /><span>No habits scheduled today.</span><Button variant="ghost" size="sm" onClick={() => navigate('/habits')}>Manage habits</Button></Card.Content></Card>
           )}
 
           <div className="section-heading goals-heading">
             <div><span>Active goals</span><h2>Where your effort is going</h2></div>
-            <Button variant="ghost" onPress={() => navigate('/goals')}>View all <ArrowRight size={16} /></Button>
+            <Button variant="ghost" onClick={() => navigate('/goals')}>View all <ArrowRight size={16} /></Button>
           </div>
           {data.activeGoals.length ? (
             <div className="dashboard-goals">
               {data.activeGoals.map((goal) => (
-                <Card key={goal.id} className="dashboard-goal-card" onClick={() => navigate(`/goals/${goal.id}`)}>
+                <Card
+                  key={goal.id}
+                  className="dashboard-goal-card"
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => navigate(`/goals/${goal.id}`)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault()
+                      navigate(`/goals/${goal.id}`)
+                    }
+                  }}
+                >
                   <Card.Content>
                     <div className="goal-card-top"><span className="goal-mini-icon"><Target size={16} /></span><StatusPill label={`${goal.progress}%`} tone="violet" /></div>
                     <h3>{goal.title}</h3>

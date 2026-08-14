@@ -1,4 +1,3 @@
-import { Chip } from '@heroui/react'
 import { Clock3, Flame, Sparkles } from 'lucide-react'
 import type { Difficulty } from '../lib/types'
 
@@ -9,7 +8,7 @@ export function StatusPill({
   label: string
   tone?: 'success' | 'warning' | 'danger' | 'neutral' | 'violet' | 'gold'
 }) {
-  return <Chip className={`status-pill status-${tone}`}>{label}</Chip>
+  return <span className={`status-pill status-${tone}`}>{label}</span>
 }
 
 export function DifficultyPill({ difficulty }: { difficulty: Difficulty }) {

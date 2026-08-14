@@ -1,4 +1,4 @@
-import { Alert } from '@heroui/react'
+import { Alert } from './ui'
 import { CircleAlert } from 'lucide-react'
 
 export function ErrorAlert({ message }: { message: string }) {

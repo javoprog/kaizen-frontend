@@ -1,4 +1,4 @@
-import { Button, Card } from '@heroui/react'
+import { Button, Card } from '../components/ui'
 import { motion } from 'motion/react'
 import {
   ArrowRight,
@@ -94,16 +94,16 @@ export function CoachPage() {
       {error && <ErrorAlert message={error} />}
 
       <div className="coach-layout">
-        <main className="coach-main">
+        <section className="coach-main">
           <Card className="coach-command-card">
             <Card.Content className="coach-command-content">
               <div className="coach-command-heading"><MessageSquareText size={18} /><div><strong>What do you need right now?</strong><span>Ask for a decision, a small action, or a recovery plan.</span></div></div>
               <div className="coach-quick-actions">
-                {quickActions.map((action) => <Button key={action.label} variant="ghost" onPress={() => void ask(action.prompt)} isDisabled={loading}><action.icon size={15} /> {action.label}</Button>)}
+                {quickActions.map((action) => <Button key={action.label} variant="secondary" size="sm" className="justify-start" onClick={() => void ask(action.prompt)} disabled={loading}><action.icon size={15} /> {action.label}</Button>)}
               </div>
               <form className="coach-form" onSubmit={submit}>
-                <FormTextarea label="Ask your coach" name="coach-question" value={question} onChange={setQuestion} placeholder="Example: What can I finish before lunch?" />
-                <Button type="submit" variant="primary" isPending={loading} isDisabled={!question.trim()}><Send size={16} /> Ask Coach</Button>
+                <FormTextarea label="Ask your coach" name="coach-question" value={question} onChange={setQuestion} placeholder="Example: What can I finish before lunch?" rows={3} />
+                <Button type="submit" variant="primary" loading={loading} disabled={!question.trim()}><Send size={16} /> Ask Coach</Button>
               </form>
             </Card.Content>
           </Card>
@@ -132,7 +132,7 @@ export function CoachPage() {
               </motion.div>
             ) : null}
           </section>
-        </main>
+        </section>
 
         {response && <aside className="coach-context-rail">
           <Card>
@@ -171,7 +171,7 @@ function RecommendationCard({ recommendation, index }: { recommendation: CoachRe
               {recommendation.health && <StatusPill label={recommendation.health} tone={recommendation.health === 'Behind' ? 'danger' : recommendation.health === 'At Risk' ? 'warning' : 'success'} />}
             </div>
           </div>
-          <Button variant="ghost" size="sm" onPress={() => navigate(recommendation.href)}>{recommendation.actionLabel} <ArrowRight size={15} /></Button>
+          <Button variant="ghost" size="sm" onClick={() => navigate(recommendation.href)}>{recommendation.actionLabel} <ArrowRight size={15} /></Button>
         </Card.Content>
       </Card>
     </motion.div>

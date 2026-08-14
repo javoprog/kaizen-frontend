@@ -1,4 +1,4 @@
-import { Button, Card, Modal } from '@heroui/react'
+import { Button, Card, Modal } from '../components/ui'
 import { motion } from 'motion/react'
 import {
   Archive,
@@ -198,7 +198,7 @@ export function HabitsPage() {
           <h1>Habits</h1>
           <p>Build repeatable actions that move with your real calendar.</p>
         </div>
-        <Button variant="primary" onPress={() => openEditor()}><Plus size={17} /> New habit</Button>
+        <Button variant="primary" onClick={() => openEditor()}><Plus size={17} /> New habit</Button>
       </header>
 
       {error && <ErrorAlert message={error} />}
@@ -209,7 +209,7 @@ export function HabitsPage() {
             <span className="empty-icon"><Repeat2 size={24} /></span>
             <h2>Create your first rhythm</h2>
             <p>Start with an action small enough to repeat. Kaizen will track its streak and reward each completed day.</p>
-            <Button variant="primary" onPress={() => openEditor()}>Create a habit <Plus size={17} /></Button>
+            <Button variant="primary" onClick={() => openEditor()}>Create a habit <Plus size={17} /></Button>
           </Card.Content>
         </Card>
       ) : (
@@ -258,7 +258,7 @@ export function HabitsPage() {
                           <div><strong>{habit.title}</strong>{habit.goal && <span><Target size={12} /> {habit.goal.title}</span>}</div>
                           <div className="habit-meta"><DifficultyPill difficulty={habit.difficulty} /><XpPill xp={habit.xpReward} />{habit.streak > 0 && <span className="meta-pill streak-pill"><Flame size={13} /> {habit.streak}</span>}</div>
                         </div>
-                        {!habit.completedToday && <Button variant="primary" size="sm" isPending={busyId === habit.id} onPress={() => void complete(habit)}>Complete</Button>}
+                        {!habit.completedToday && <Button variant="primary" size="sm" loading={busyId === habit.id} onClick={() => void complete(habit)}>Complete</Button>}
                       </Card.Content>
                     </Card>
                   </motion.div>
@@ -319,9 +319,9 @@ function HabitCard({ habit, calendarDays, busy, onEdit, onPause, onDelete }: {
         <div className="habit-card-top">
           <span className="habit-library-icon"><Repeat2 size={18} /></span>
           <div className="habit-card-actions">
-            <Button isIconOnly size="sm" variant="ghost" aria-label={`Edit ${habit.title}`} onPress={onEdit}><Pencil size={15} /></Button>
-            <Button isIconOnly size="sm" variant="ghost" aria-label={habit.status === 'ACTIVE' ? `Pause ${habit.title}` : `Resume ${habit.title}`} isPending={busy} onPress={onPause}>{habit.status === 'ACTIVE' ? <Pause size={15} /> : <Play size={15} />}</Button>
-            <Button isIconOnly size="sm" variant="ghost" aria-label={`Remove ${habit.title}`} onPress={onDelete}><Trash2 size={15} /></Button>
+            <Button size="icon-sm" variant="ghost" aria-label={`Edit ${habit.title}`} onClick={onEdit}><Pencil size={15} /></Button>
+            <Button size="icon-sm" variant="ghost" aria-label={habit.status === 'ACTIVE' ? `Pause ${habit.title}` : `Resume ${habit.title}`} loading={busy} onClick={onPause}>{habit.status === 'ACTIVE' ? <Pause size={15} /> : <Play size={15} />}</Button>
+            <Button size="icon-sm" variant="ghost" aria-label={`Remove ${habit.title}`} onClick={onDelete}><Trash2 size={15} /></Button>
           </div>
         </div>
         <h3>{habit.title}</h3>
@@ -381,7 +381,7 @@ function HabitEditor({ editing, draft, goals, saving, onDraft, onClose, onSave }
               </div>
             )}
           </Modal.Body>
-          <Modal.Footer><Button variant="ghost" onPress={onClose}>Cancel</Button><Button variant="primary" isPending={saving} onPress={onSave}>{editing === 'new' ? 'Create habit' : 'Save changes'}</Button></Modal.Footer>
+          <Modal.Footer><Button variant="ghost" onClick={onClose}>Cancel</Button><Button variant="primary" loading={saving} onClick={onSave}>{editing === 'new' ? 'Create habit' : 'Save changes'}</Button></Modal.Footer>
         </Modal.Dialog>
       </Modal.Container>
     </Modal.Backdrop>
@@ -398,7 +398,7 @@ function DeleteHabitModal({ habit, busy, onClose, onDelete }: { habit: Habit | n
           <Modal.CloseTrigger />
           <Modal.Header><span className="delete-icon">{hasHistory ? <Archive size={20} /> : <Trash2 size={20} />}</span><Modal.Heading>{hasHistory ? 'Archive this habit?' : 'Delete this habit?'}</Modal.Heading></Modal.Header>
           <Modal.Body><p>{hasHistory ? 'Its completion history and earned XP will remain intact, but the habit will leave your active library.' : 'This habit has no completion history and will be permanently removed.'}</p></Modal.Body>
-          <Modal.Footer><Button variant="ghost" onPress={onClose}>Keep habit</Button><Button variant="primary" isPending={busy} onPress={onDelete}>{hasHistory ? 'Archive habit' : 'Delete habit'}</Button></Modal.Footer>
+          <Modal.Footer><Button variant="ghost" onClick={onClose}>Keep habit</Button><Button variant={hasHistory ? 'secondary' : 'destructive'} loading={busy} onClick={onDelete}>{hasHistory ? 'Archive habit' : 'Delete habit'}</Button></Modal.Footer>
         </Modal.Dialog>
       </Modal.Container>
     </Modal.Backdrop>

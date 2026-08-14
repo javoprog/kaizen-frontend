@@ -1,4 +1,4 @@
-import { ProgressBar } from '@heroui/react'
+import { Progress } from './ui'
 
 export function ProgressMeter({
   value,
@@ -10,10 +10,6 @@ export function ProgressMeter({
   tone?: 'violet' | 'gold' | 'green'
 }) {
   return (
-    <ProgressBar value={value} aria-label={label ?? 'Progress'} className={`meter meter-${tone}`}>
-      <ProgressBar.Track>
-        <ProgressBar.Fill />
-      </ProgressBar.Track>
-    </ProgressBar>
+    <Progress value={value} aria-label={label ?? 'Progress'} className={`meter meter-${tone}`} />
   )
 }

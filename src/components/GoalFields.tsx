@@ -1,14 +1,7 @@
-import {
-  Calendar,
-  DateField,
-  DatePicker,
-  Description,
-  Label,
-  ListBox,
-  Select,
-} from '@heroui/react'
 import type { DateValue } from '@internationalized/date'
-import { today, getLocalTimeZone } from '@internationalized/date'
+import { getLocalTimeZone, parseDate, today } from '@internationalized/date'
+import { Input } from './ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
 
 export function KaizenDatePicker({
   value,
@@ -18,40 +11,17 @@ export function KaizenDatePicker({
   onChange: (value: DateValue | null) => void
 }) {
   return (
-    <DatePicker value={value} onChange={onChange} minValue={today(getLocalTimeZone())}>
-      <Label>Target date <span className="optional">Optional</span></Label>
-      <DateField.Group fullWidth>
-        <DateField.Input>
-          {(segment) => <DateField.Segment segment={segment} />}
-        </DateField.Input>
-        <DateField.Suffix>
-          <DatePicker.Trigger aria-label="Open target date calendar">
-            <DatePicker.TriggerIndicator />
-          </DatePicker.Trigger>
-        </DateField.Suffix>
-      </DateField.Group>
-      <Description>A deadline helps Kaizen calculate your pace.</Description>
-      <DatePicker.Popover>
-        <Calendar aria-label="Choose target date">
-          <Calendar.Header>
-            <Calendar.YearPickerTrigger>
-              <Calendar.YearPickerTriggerHeading />
-              <Calendar.YearPickerTriggerIndicator />
-            </Calendar.YearPickerTrigger>
-            <Calendar.NavButton slot="previous" />
-            <Calendar.NavButton slot="next" />
-          </Calendar.Header>
-          <Calendar.Grid>
-            <Calendar.GridHeader>
-              {(day) => <Calendar.HeaderCell>{day}</Calendar.HeaderCell>}
-            </Calendar.GridHeader>
-            <Calendar.GridBody>
-              {(date) => <Calendar.Cell date={date} />}
-            </Calendar.GridBody>
-          </Calendar.Grid>
-        </Calendar>
-      </DatePicker.Popover>
-    </DatePicker>
+    <div className="date-picker">
+      <label className="label" htmlFor="target-date">Target date <span className="optional">Optional</span></label>
+      <Input
+        id="target-date"
+        type="date"
+        min={today(getLocalTimeZone()).toString()}
+        value={value?.toString() ?? ''}
+        onChange={(event) => onChange(event.target.value ? parseDate(event.target.value) : null)}
+      />
+      <p className="description">A deadline helps Kaizen calculate your pace.</p>
+    </div>
   )
 }
 
@@ -62,7 +32,7 @@ export function KaizenSelect({
   options,
   description,
   variant = 'primary',
-  isDisabled = false,
+  disabled = false,
 }: {
   label: string
   value: string
@@ -70,26 +40,18 @@ export function KaizenSelect({
   options: Array<{ value: string; label: string }>
   description?: string
   variant?: 'primary' | 'secondary'
-  isDisabled?: boolean
+  disabled?: boolean
 }) {
   return (
-    <Select value={value} onChange={(key) => onChange(String(key))} placeholder="Select one" variant={variant} fullWidth isDisabled={isDisabled}>
-      <Label>{label}</Label>
-      <Select.Trigger>
-        <Select.Value />
-        <Select.Indicator />
-      </Select.Trigger>
-      {description && <Description>{description}</Description>}
-      <Select.Popover>
-        <ListBox>
-          {options.map((option) => (
-            <ListBox.Item key={option.value} id={option.value} textValue={option.label}>
-              {option.label}
-              <ListBox.ItemIndicator />
-            </ListBox.Item>
-          ))}
-        </ListBox>
-      </Select.Popover>
-    </Select>
+    <div className="select" data-variant={variant}>
+      <span className="label">{label}</span>
+      <Select value={value} onValueChange={onChange} disabled={disabled}>
+        <SelectTrigger aria-label={label}><SelectValue placeholder="Select one" /></SelectTrigger>
+        <SelectContent>
+          {options.map((option) => <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>)}
+        </SelectContent>
+      </Select>
+      {description && <p className="description">{description}</p>}
+    </div>
   )
 }

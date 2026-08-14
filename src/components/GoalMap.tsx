@@ -1,4 +1,4 @@
-import { Card } from '@heroui/react'
+import { Card } from './ui'
 import {
   Background,
   Controls,
@@ -64,7 +64,7 @@ export function GoalMap({ goal }: { goal: Goal }) {
           nodesConnectable={false}
           onNodeClick={(_, node) => setSelected(node.data as GoalMapData)}
         >
-          <Background color="rgba(139, 92, 246, 0.14)" gap={24} size={1} />
+          <Background color="var(--border-soft)" gap={24} size={1} />
           <Controls showInteractive={false} />
         </ReactFlow>
       </div>
@@ -123,7 +123,7 @@ function buildMap(goal: Goal): { nodes: GoalNode[]; edges: Edge[] } {
       source: goal.id,
       target: milestone.id,
       animated: milestone.status === 'CURRENT',
-      style: { stroke: milestone.status === 'COMPLETED' ? '#5ee2a0' : '#7c5cff', strokeWidth: 1.5 },
+      style: { stroke: milestone.status === 'COMPLETED' ? 'var(--success)' : milestone.status === 'CURRENT' ? 'var(--brand-strong)' : 'var(--border-raised)', strokeWidth: 1.5 },
     })
     milestone.tasks.forEach((task, taskIndex) => {
       const taskY = yCursor + taskIndex * 78
@@ -145,7 +145,7 @@ function buildMap(goal: Goal): { nodes: GoalNode[]; edges: Edge[] } {
         id: `${milestone.id}-${task.id}`,
         source: milestone.id,
         target: task.id,
-        style: { stroke: task.completed ? '#5ee2a0' : '#484258', strokeWidth: 1.25 },
+        style: { stroke: task.completed ? 'var(--success)' : 'var(--border-raised)', strokeWidth: 1.25 },
       })
     })
     yCursor += Math.max(160, milestone.tasks.length * 78 + 30)

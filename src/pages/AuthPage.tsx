@@ -1,4 +1,4 @@
-import { Alert, Button, Card, Tabs } from '@heroui/react'
+import { Alert, Button, Card, Tabs } from '../components/ui'
 import { ArrowRight, BrainCircuit, CheckCircle2, Route, Sparkles } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -86,10 +86,10 @@ export function AuthPage() {
               onSelectionChange={(key) => setMode(key as Mode)}
               className="auth-tabs"
             >
-              <Tabs.ListContainer className="auth-tab-shell">
-                <Tabs.List aria-label="Authentication mode" className="auth-tab-list">
-                  <Tabs.Tab id="register" className="auth-tab-item">Create account</Tabs.Tab>
-                  <Tabs.Tab id="login" className="auth-tab-item">Log in</Tabs.Tab>
+              <Tabs.ListContainer>
+                <Tabs.List aria-label="Authentication mode">
+                  <Tabs.Tab id="register">Create account</Tabs.Tab>
+                  <Tabs.Tab id="login">Log in</Tabs.Tab>
                 </Tabs.List>
               </Tabs.ListContainer>
             </Tabs>
@@ -138,7 +138,7 @@ export function AuthPage() {
                 required
               />
               {error && <ErrorAlert message={error} />}
-              <Button type="submit" variant="primary" fullWidth isPending={submitting}>
+              <Button type="submit" variant="primary" className="w-full" loading={submitting}>
                 {mode === 'register' ? 'Build my first goal' : 'Continue to Kaizen'}
                 {!submitting && <ArrowRight size={17} />}
               </Button>

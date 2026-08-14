@@ -1,4 +1,4 @@
-import { Button, Card } from '@heroui/react'
+import { Button, Card } from '../components/ui'
 import { ArrowRight, CalendarDays, Plus, Target } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -28,13 +28,25 @@ export function GoalsPage() {
     <div className="page goals-page">
       <header className="dashboard-header">
         <div><span className="eyebrow">Your direction</span><h1>Goals</h1><p>Every milestone, action, and reward starts with something meaningful.</p></div>
-        <Button variant="primary" onPress={() => navigate('/goals/new')}><Plus size={17} /> New goal</Button>
+        <Button variant="primary" onClick={() => navigate('/goals/new')}><Plus size={17} /> New goal</Button>
       </header>
       {error && <ErrorAlert message={error} />}
       {loading ? <div className="skeleton-card" /> : goals.length ? (
         <div className="goal-library">
           {goals.map((goal) => (
-            <Card key={goal.id} className="goal-library-card" onClick={() => navigate(goal.planningStatus === 'DRAFT' ? `/goals/${goal.id}/plan` : `/goals/${goal.id}`)}>
+            <Card
+              key={goal.id}
+              className="goal-library-card"
+              role="button"
+              tabIndex={0}
+              onClick={() => navigate(goal.planningStatus === 'DRAFT' ? `/goals/${goal.id}/plan` : `/goals/${goal.id}`)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault()
+                  navigate(goal.planningStatus === 'DRAFT' ? `/goals/${goal.id}/plan` : `/goals/${goal.id}`)
+                }
+              }}
+            >
               <Card.Content>
                 <div className="goal-library-top">
                   <span className="goal-library-icon"><Target size={20} /></span>
@@ -53,7 +65,7 @@ export function GoalsPage() {
         </div>
       ) : (
         <Card className="goals-empty">
-          <Card.Content><span className="empty-icon"><Target size={24} /></span><h2>Choose your next direction</h2><p>Describe what you want to achieve. Kaizen will help you shape the path.</p><Button variant="primary" onPress={() => navigate('/goals/new')}>Create your first goal <ArrowRight size={17} /></Button></Card.Content>
+          <Card.Content><span className="empty-icon"><Target size={24} /></span><h2>Choose your next direction</h2><p>Describe what you want to achieve. Kaizen will help you shape the path.</p><Button variant="primary" onClick={() => navigate('/goals/new')}>Create your first goal <ArrowRight size={17} /></Button></Card.Content>
         </Card>
       )}
     </div>
