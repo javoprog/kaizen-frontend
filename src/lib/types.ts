@@ -79,7 +79,10 @@ export interface PlanSuggestion {
 }
 
 export interface Reward {
-  taskId: string
+  entityType?: 'HABIT'
+  taskId?: string
+  habitId?: string
+  habitStreak?: number
   xpGained: number
   totalXp: number
   previousLevel: number
@@ -90,6 +93,63 @@ export interface Reward {
   goalProgress: number | null
   milestoneProgress: number | null
   achievements: Array<{ id: string; name: string; description: string }>
+}
+
+export interface HabitCompletion {
+  id: string
+  localDate: string
+  xpAwarded: number
+  completedAt: string
+}
+
+export interface Habit {
+  id: string
+  title: string
+  description: string | null
+  difficulty: Difficulty
+  scheduleType: 'DAILY' | 'SELECTED_DAYS'
+  daysOfWeek: number[]
+  status: 'ACTIVE' | 'PAUSED'
+  goal: { id: string; title: string } | null
+  completions: HabitCompletion[]
+  xpReward: number
+  dueToday: boolean
+  completedToday: boolean
+  streak: number
+  totalCompletions: number
+  today: string
+}
+
+export interface CoachRecommendation {
+  type: 'TASK' | 'HABIT' | 'GOAL'
+  id: string
+  title: string
+  reason: string
+  actionLabel: string
+  href: string
+  goalTitle?: string
+  priority?: string
+  difficulty?: Difficulty
+  durationMinutes?: number | null
+  xpReward?: number
+  overdue?: boolean
+  completedToday?: boolean
+  streak?: number
+  health?: string
+  progress?: number
+}
+
+export interface CoachResponse {
+  source: 'OPENAI' | 'LOCAL_COACH'
+  message: string
+  recommendations: CoachRecommendation[]
+  contextSummary: {
+    activeGoals: number
+    dueHabits: number
+    overdueTasks: number
+    streak: number
+    kaizenScore: number
+  }
 }
 
 export interface DashboardData {
@@ -111,7 +171,16 @@ export interface DashboardData {
     percent: number
   }
   focus: (Task & { xpReward: number }) | null
-  today: { pendingTasks: number; completedTasks: number; xpEarned: number }
+  today: {
+    pendingTasks: number
+    completedTasks: number
+    pendingHabits: number
+    completedHabits: number
+    totalCompleted: number
+    totalPlanned: number
+    xpEarned: number
+  }
+  todayHabits: Habit[]
   activeGoals: Array<{
     id: string
     title: string

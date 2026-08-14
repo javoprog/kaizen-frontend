@@ -1,13 +1,13 @@
 import { Button } from '@heroui/react'
 import {
   BarChart3,
+  BrainCircuit,
   ChevronRight,
-  CircleUserRound,
   Compass,
   LayoutDashboard,
   LogOut,
   Plus,
-  Settings,
+  Repeat2,
 } from 'lucide-react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../state/auth'
@@ -16,6 +16,8 @@ import { Brand } from './Brand'
 const mainNav = [
   { to: '/', label: 'Today', icon: LayoutDashboard },
   { to: '/goals', label: 'Goals', icon: Compass },
+  { to: '/habits', label: 'Habits', icon: Repeat2 },
+  { to: '/coach', label: 'Coach', icon: BrainCircuit },
 ]
 
 export function AppShell() {
@@ -56,7 +58,7 @@ export function AppShell() {
             <BarChart3 size={16} />
             <div>
               <strong>Next in Kaizen</strong>
-              <span>Habits · Reviews · Analytics</span>
+              <span>Reviews · Analytics</span>
             </div>
           </div>
           <div className="profile-strip">
@@ -102,14 +104,6 @@ export function AppShell() {
             <span>{item.label}</span>
           </NavLink>
         ))}
-        <NavLink to="/profile" className="mobile-nav-item">
-          <CircleUserRound size={20} />
-          <span>Profile</span>
-        </NavLink>
-        <NavLink to="/settings" className="mobile-nav-item">
-          <Settings size={20} />
-          <span>Settings</span>
-        </NavLink>
       </nav>
     </div>
   )

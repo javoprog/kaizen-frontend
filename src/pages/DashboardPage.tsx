@@ -8,6 +8,7 @@ import {
   Flame,
   Gauge,
   Plus,
+  Repeat2,
   Sparkles,
   Target,
   TrendingUp,
@@ -19,13 +20,14 @@ import { ProgressMeter } from '../components/ProgressMeter'
 import { RewardModal } from '../components/RewardModal'
 import { DifficultyPill, StatusPill, TimePill, XpPill } from '../components/StatusPill'
 import { api } from '../lib/api'
-import type { DashboardData, Reward, Task } from '../lib/types'
+import type { DashboardData, Habit, Reward, Task } from '../lib/types'
 import { useAuth } from '../state/auth'
 
 export function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null)
   const [reward, setReward] = useState<Reward | null>(null)
   const [completing, setCompleting] = useState(false)
+  const [completingHabit, setCompletingHabit] = useState('')
   const [error, setError] = useState('')
   const requested = useRef(false)
   const navigate = useNavigate()
@@ -59,6 +61,19 @@ export function DashboardPage() {
     }
   }
 
+  async function completeHabit(habit: Habit) {
+    setCompletingHabit(habit.id)
+    try {
+      const result = await api<Reward>(`/habits/${habit.id}/complete`, { method: 'POST' })
+      setReward(result)
+      await Promise.all([load(), refreshUser()])
+    } catch (requestError) {
+      setError(requestError instanceof Error ? requestError.message : 'Unable to complete habit')
+    } finally {
+      setCompletingHabit('')
+    }
+  }
+
   if (!data && !error) return <DashboardSkeleton />
   if (!data) return <div className="page"><ErrorAlert message={error} /></div>
 
@@ -74,7 +89,7 @@ export function DashboardPage() {
         <div>
           <span className="eyebrow">{formatToday()}</span>
           <h1>{greeting}, {firstName(data.user.displayName || data.user.username)}.</h1>
-          <p>{data.today.completedTasks > 0 ? `You have completed ${data.today.completedTasks} action${data.today.completedTasks === 1 ? '' : 's'} today.` : 'One meaningful action is enough to create momentum.'}</p>
+          <p>{data.today.totalCompleted > 0 ? `You have completed ${data.today.totalCompleted} action${data.today.totalCompleted === 1 ? '' : 's'} today.` : 'One meaningful action is enough to create momentum.'}</p>
         </div>
         <Button variant="primary" onPress={() => navigate('/goals/new')}><Plus size={17} /> New goal</Button>
       </header>
@@ -155,6 +170,27 @@ export function DashboardPage() {
             </Card>
           )}
 
+          <div className="section-heading habits-heading">
+            <div><span>Today’s habits</span><h2>Keep your rhythm visible</h2></div>
+            <Button variant="ghost" onPress={() => navigate('/habits')}>View habits <ArrowRight size={16} /></Button>
+          </div>
+          {data.todayHabits.length ? (
+            <div className="dashboard-habits">
+              {data.todayHabits.map((habit) => (
+                <Card key={habit.id} className={`dashboard-habit-row ${habit.completedToday ? 'completed' : ''}`}>
+                  <Card.Content>
+                    <span className="dashboard-habit-icon">{habit.completedToday ? <CheckCircle2 size={18} /> : <Repeat2 size={18} />}</span>
+                    <div><strong>{habit.title}</strong><span>{habit.goal?.title || (habit.scheduleType === 'DAILY' ? 'Every day' : 'Scheduled habit')}</span></div>
+                    <div className="dashboard-habit-meta"><XpPill xp={habit.xpReward} />{habit.streak > 0 && <span className="meta-pill streak-pill"><Flame size={13} /> {habit.streak}</span>}</div>
+                    <Button size="sm" variant={habit.completedToday ? 'ghost' : 'primary'} isDisabled={habit.completedToday} isPending={completingHabit === habit.id} onPress={() => void completeHabit(habit)}>{habit.completedToday ? 'Done' : 'Complete'}</Button>
+                  </Card.Content>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <Card className="dashboard-habits-empty"><Card.Content><Repeat2 size={18} /><span>No habits scheduled today.</span><Button variant="ghost" size="sm" onPress={() => navigate('/habits')}>Manage habits</Button></Card.Content></Card>
+          )}
+
           <div className="section-heading goals-heading">
             <div><span>Active goals</span><h2>Where your effort is going</h2></div>
             <Button variant="ghost" onPress={() => navigate('/goals')}>View all <ArrowRight size={16} /></Button>
@@ -181,11 +217,12 @@ export function DashboardPage() {
           <Card className="today-card">
             <Card.Header><Card.Title>Today</Card.Title><StatusPill label={`${data.today.xpEarned} XP`} tone="gold" /></Card.Header>
             <Card.Content>
-              <div className="today-ring" style={{ '--today-progress': Math.min(100, data.today.completedTasks * 25) } as React.CSSProperties}>
-                <div><strong>{data.today.completedTasks}</strong><span>done</span></div>
+              <div className="today-ring" style={{ '--today-progress': data.today.totalPlanned ? Math.round((data.today.totalCompleted / data.today.totalPlanned) * 100) : 0 } as React.CSSProperties}>
+                <div><strong>{data.today.totalCompleted}/{data.today.totalPlanned}</strong><span>done</span></div>
               </div>
               <div className="today-breakdown">
-                <div><span>Remaining actions</span><strong>{data.today.pendingTasks}</strong></div>
+                <div><span>Remaining tasks</span><strong>{data.today.pendingTasks}</strong></div>
+                <div><span>Remaining habits</span><strong>{data.today.pendingHabits}</strong></div>
                 <div><span>Weekly XP</span><strong>{data.weeklyXp}</strong></div>
               </div>
             </Card.Content>

@@ -7,6 +7,8 @@ import { useAuth } from './state/auth'
 const AuthPage = lazy(() => import('./pages/AuthPage').then((module) => ({ default: module.AuthPage })))
 const ComingSoonPage = lazy(() => import('./pages/ComingSoonPage').then((module) => ({ default: module.ComingSoonPage })))
 const DashboardPage = lazy(() => import('./pages/DashboardPage').then((module) => ({ default: module.DashboardPage })))
+const HabitsPage = lazy(() => import('./pages/HabitsPage').then((module) => ({ default: module.HabitsPage })))
+const CoachPage = lazy(() => import('./pages/CoachPage').then((module) => ({ default: module.CoachPage })))
 const GoalCreatePage = lazy(() => import('./pages/GoalCreatePage').then((module) => ({ default: module.GoalCreatePage })))
 const GoalsPage = lazy(() => import('./pages/GoalsPage').then((module) => ({ default: module.GoalsPage })))
 const GoalWorkspacePage = lazy(() => import('./pages/GoalWorkspacePage').then((module) => ({ default: module.GoalWorkspacePage })))
@@ -35,6 +37,8 @@ export default function App() {
         <Route path="/goals/:id/edit-plan" element={<PlanReviewPage mode="edit" />} />
         <Route element={<AppShell />}>
           <Route index element={<DashboardPage />} />
+          <Route path="habits" element={<HabitsPage />} />
+          <Route path="coach" element={<CoachPage />} />
           <Route path="goals" element={<GoalsPage />} />
           <Route path="goals/new" element={<GoalCreatePage />} />
           <Route path="goals/:id" element={<GoalWorkspacePage />} />
