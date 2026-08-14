@@ -278,7 +278,7 @@ export function PlanReviewPage({ mode = 'draft' }: { mode?: 'draft' | 'edit' }) 
           const containsCompletedWork = milestone.tasks.some((task) => task.completed)
           return (
             <Card key={milestone.clientId} className="plan-milestone">
-              <Card.Header>
+              <Card.Header className="plan-milestone-header">
                 <div className="milestone-number">{String(milestoneIndex + 1).padStart(2, '0')}</div>
                 <div className="plan-milestone-fields">
                   <div className="plan-edit-field">
@@ -306,7 +306,7 @@ export function PlanReviewPage({ mode = 'draft' }: { mode?: 'draft' | 'edit' }) 
                   <IconActionHint label={containsCompletedWork ? 'Completed work keeps this milestone in the plan' : 'Delete milestone'}><Button isIconOnly size="sm" variant="danger-soft" aria-label="Delete milestone" isDisabled={plan.length === 1 || containsCompletedWork} onPress={() => setPlan((current) => current.filter((_, index) => index !== milestoneIndex))}><Trash2 size={15} /></Button></IconActionHint>
                 </div>
               </Card.Header>
-              <Card.Content>
+              <Card.Content className="plan-milestone-content">
                 <div className="plan-tasks">
                   {milestone.tasks.map((task, taskIndex) => (
                     <div key={task.clientId} className={`plan-task-row${task.completed ? ' completed-plan-task' : ''}`}>

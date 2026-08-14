@@ -72,7 +72,7 @@ export function AuthPage() {
 
       <section className="auth-form-wrap">
         <Card className="auth-card">
-          <Card.Header>
+          <Card.Header className="auth-card-header">
             <Card.Title>{mode === 'register' ? 'Start your next chapter' : 'Welcome back'}</Card.Title>
             <Card.Description>
               {mode === 'register'
@@ -80,16 +80,16 @@ export function AuthPage() {
                 : 'Pick up exactly where your momentum left off.'}
             </Card.Description>
           </Card.Header>
-          <Card.Content>
+          <Card.Content className="auth-card-content">
             <Tabs
               selectedKey={mode}
               onSelectionChange={(key) => setMode(key as Mode)}
               className="auth-tabs"
             >
-              <Tabs.ListContainer>
-                <Tabs.List aria-label="Authentication mode">
-                  <Tabs.Tab id="register">Create account</Tabs.Tab>
-                  <Tabs.Tab id="login">Log in</Tabs.Tab>
+              <Tabs.ListContainer className="auth-tab-shell">
+                <Tabs.List aria-label="Authentication mode" className="auth-tab-list">
+                  <Tabs.Tab id="register" className="auth-tab-item">Create account</Tabs.Tab>
+                  <Tabs.Tab id="login" className="auth-tab-item">Log in</Tabs.Tab>
                 </Tabs.List>
               </Tabs.ListContainer>
             </Tabs>
@@ -144,7 +144,7 @@ export function AuthPage() {
               </Button>
             </form>
           </Card.Content>
-          <Card.Footer>
+          <Card.Footer className="auth-card-footer">
             <Alert status="default" className="privacy-note">
               <Alert.Content>
                 <Alert.Description>

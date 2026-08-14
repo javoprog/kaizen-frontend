@@ -96,7 +96,7 @@ export function CoachPage() {
       <div className="coach-layout">
         <main className="coach-main">
           <Card className="coach-command-card">
-            <Card.Content>
+            <Card.Content className="coach-command-content">
               <div className="coach-command-heading"><MessageSquareText size={18} /><div><strong>What do you need right now?</strong><span>Ask for a decision, a small action, or a recovery plan.</span></div></div>
               <div className="coach-quick-actions">
                 {quickActions.map((action) => <Button key={action.label} variant="ghost" onPress={() => void ask(action.prompt)} isDisabled={loading}><action.icon size={15} /> {action.label}</Button>)}

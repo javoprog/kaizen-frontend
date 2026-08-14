@@ -144,13 +144,13 @@ export function GoalWorkspacePage() {
 
       {error && <ErrorAlert message={error} />}
 
-      <Tabs selectedKey={tab} onSelectionChange={(key) => setTab(key as WorkspaceTab)} className="workspace-tabs">
-        <Tabs.ListContainer>
-          <Tabs.List aria-label="Goal workspace sections">
-            <Tabs.Tab id="overview">Overview</Tabs.Tab>
-            <Tabs.Tab id="roadmap">Roadmap</Tabs.Tab>
-            <Tabs.Tab id="tasks">Tasks <span className="tab-count">{remaining}</span></Tabs.Tab>
-            <Tabs.Tab id="insights">Insights</Tabs.Tab>
+      <Tabs variant="secondary" selectedKey={tab} onSelectionChange={(key) => setTab(key as WorkspaceTab)} className="workspace-tabs">
+        <Tabs.ListContainer className="workspace-tab-shell">
+          <Tabs.List aria-label="Goal workspace sections" className="workspace-tab-list">
+            <Tabs.Tab id="overview" className="workspace-tab-item">Overview</Tabs.Tab>
+            <Tabs.Tab id="roadmap" className="workspace-tab-item">Roadmap</Tabs.Tab>
+            <Tabs.Tab id="tasks" className="workspace-tab-item">Tasks <span className="tab-count">{remaining}</span></Tabs.Tab>
+            <Tabs.Tab id="insights" className="workspace-tab-item">Insights</Tabs.Tab>
           </Tabs.List>
         </Tabs.ListContainer>
 
