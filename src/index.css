@@ -46,10 +46,29 @@ a { color: inherit; text-decoration: none; }
 p, h1, h2, h3 { margin-top: 0; }
 h1, h2, h3, strong { overflow-wrap: anywhere; }
 
-/* Form Controls & Labels */
-.textfield, .select, .date-picker { min-width: 0; gap: 7px; }
-.label, label, [data-slot="label"] { font-size: 13px; font-weight: 550; color: #e6e1ee; line-height: 1.35; }
-.description, [data-slot="description"] { font-size: 11px; color: var(--muted); line-height: 1.5; margin-top: 3px; }
+/* Form Controls & Outer Field Containers */
+.textfield, .select, .date-picker, [data-slot="root"], [data-slot="field"] { 
+  min-width: 0; 
+  gap: 7px; 
+  background: transparent !important; 
+  border: none !important; 
+  box-shadow: none !important; 
+  outline: none !important; 
+}
+
+.label, label, [data-slot="label"] { 
+  font-size: 13px; 
+  font-weight: 550; 
+  color: #e6e1ee; 
+  line-height: 1.35; 
+}
+
+.description, [data-slot="description"] { 
+  font-size: 11px; 
+  color: var(--muted); 
+  line-height: 1.5; 
+  margin-top: 3px; 
+}
 
 .input, 
 .textarea, 
@@ -63,7 +82,6 @@ textarea,
 select,
 [data-slot="input"],
 [data-slot="textarea"],
-[data-slot="control"],
 [data-slot="trigger"],
 [data-slot="group"] {
   min-width: 0;
@@ -77,7 +95,6 @@ select,
 }
 
 .input, 
-.select__trigger, 
 .date-input-group,
 input[type="text"],
 input[type="email"],
@@ -85,12 +102,44 @@ input[type="password"],
 input[type="number"],
 select,
 [data-slot="input"],
-[data-slot="control"],
-[data-slot="trigger"],
 [data-slot="group"] {
   height: var(--control-height);
   min-height: var(--control-height);
   padding: 0 14px;
+}
+
+/* Select Trigger & Vertical Centering */
+.select__trigger, [data-slot="trigger"] {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  height: var(--control-height) !important;
+  min-height: var(--control-height) !important;
+  padding: 0 14px !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+}
+
+.select__value, [data-slot="value"], .select__trigger > span {
+  display: inline-flex !important;
+  align-items: center !important;
+  height: 100% !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: #f7f6fb !important;
+  font-size: 13px !important;
+}
+
+.select__indicator, [data-slot="indicator"], .select__trigger svg {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  color: #9c95a8 !important;
+  margin-left: 8px !important;
+  transition: transform 0.16s ease !important;
 }
 
 .textarea, 
@@ -125,6 +174,8 @@ select:hover,
 .input:focus,
 .textarea:focus,
 .select__trigger:focus,
+.select__trigger[data-focused="true"],
+.select__trigger[data-focus-visible="true"],
 .date-input-group:focus-within,
 input:focus,
 textarea:focus,
@@ -132,8 +183,9 @@ select:focus,
 [data-slot="input"]:focus,
 [data-slot="textarea"]:focus,
 [data-slot="trigger"]:focus,
-[data-focused="true"],
-[data-focus-visible="true"] {
+[data-slot="trigger"][data-focused="true"],
+[data-slot="trigger"][data-focus-visible="true"],
+[data-slot="group"]:focus-within {
   border-color: var(--violet-soft) !important;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), 0 0 0 2px rgba(139, 109, 255, 0.45) !important;
   outline: none !important;
@@ -150,6 +202,45 @@ select:disabled,
   cursor: not-allowed !important;
   background: #0e0c13 !important;
   border-color: #221d2d !important;
+}
+
+/* Select Popover / ListBox Options */
+[data-slot="popover"], .select-popover {
+  background: var(--surface-raised) !important;
+  border: 1px solid var(--border-raised) !important;
+  border-radius: var(--control-radius) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55) !important;
+  padding: 6px !important;
+  z-index: 100 !important;
+}
+
+[data-slot="listbox"], [role="listbox"] {
+  display: grid !important;
+  gap: 2px !important;
+  outline: none !important;
+}
+
+[data-slot="item"], [role="option"] {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  min-height: 38px !important;
+  padding: 8px 12px !important;
+  border-radius: 8px !important;
+  color: #e6e1ee !important;
+  font-size: 13px !important;
+  cursor: pointer !important;
+  transition: background 0.14s ease, color 0.14s ease !important;
+}
+
+[data-slot="item"]:hover, 
+[role="option"]:hover, 
+[data-slot="item"][data-focused="true"], 
+[role="option"][data-focused="true"],
+[data-slot="item"][data-selected="true"],
+[role="option"][aria-selected="true"] {
+  background: rgba(139, 109, 255, 0.16) !important;
+  color: #ffffff !important;
 }
 
 ::selection { background: rgba(139, 109, 255, .35); }
