@@ -62,6 +62,7 @@ export function KaizenSelect({
   options,
   description,
   variant = 'primary',
+  isDisabled = false,
 }: {
   label: string
   value: string
@@ -69,9 +70,10 @@ export function KaizenSelect({
   options: Array<{ value: string; label: string }>
   description?: string
   variant?: 'primary' | 'secondary'
+  isDisabled?: boolean
 }) {
   return (
-    <Select value={value} onChange={(key) => onChange(String(key))} placeholder="Select one" variant={variant} fullWidth>
+    <Select value={value} onChange={(key) => onChange(String(key))} placeholder="Select one" variant={variant} fullWidth isDisabled={isDisabled}>
       <Label>{label}</Label>
       <Select.Trigger>
         <Select.Value />

@@ -66,7 +66,7 @@ export function OnboardingPage() {
         body: JSON.stringify({
           title: intent,
           category: category || undefined,
-          targetDate: date ? `${date.toString()}T12:00:00.000Z` : undefined,
+          targetDate: date?.toString(),
         }),
       })
       await api('/users/me/onboarding', {

@@ -14,6 +14,10 @@ export function GoalCreatePage() {
   const [description, setDescription] = useState('')
   const [category, setCategory] = useState('')
   const [priority, setPriority] = useState('MEDIUM')
+  const [progressStrategy, setProgressStrategy] = useState<'TASKS' | 'METRIC'>('TASKS')
+  const [currentValue, setCurrentValue] = useState('')
+  const [targetValue, setTargetValue] = useState('')
+  const [unit, setUnit] = useState('')
   const [date, setDate] = useState<DateValue | null>(null)
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -30,7 +34,11 @@ export function GoalCreatePage() {
           description: description || undefined,
           category: category || undefined,
           priority,
-          targetDate: date ? `${date.toString()}T12:00:00.000Z` : undefined,
+          targetDate: date?.toString(),
+          progressStrategy,
+          currentValue: progressStrategy === 'METRIC' ? Number(currentValue) : undefined,
+          targetValue: progressStrategy === 'METRIC' ? Number(targetValue) : undefined,
+          unit: progressStrategy === 'METRIC' ? unit || undefined : undefined,
         }),
       })
       navigate(`/goals/${goal.id}/plan`)
@@ -102,6 +110,45 @@ export function GoalCreatePage() {
                     ]}
                   />
                 </div>
+                <KaizenSelect
+                  label="Progress tracking"
+                  value={progressStrategy}
+                  onChange={(value) => setProgressStrategy(value as 'TASKS' | 'METRIC')}
+                  options={[
+                    { value: 'TASKS', label: 'Completed actions' },
+                    { value: 'METRIC', label: 'A measurable value' },
+                  ]}
+                  description="Metric tracking works for values that rise or fall."
+                />
+                {progressStrategy === 'METRIC' && (
+                  <div className="metric-create-fields">
+                    <FormField
+                      label="Starting value"
+                      name="currentValue"
+                      type="number"
+                      value={currentValue}
+                      onChange={setCurrentValue}
+                      placeholder="92"
+                      required
+                    />
+                    <FormField
+                      label="Target value"
+                      name="targetValue"
+                      type="number"
+                      value={targetValue}
+                      onChange={setTargetValue}
+                      placeholder="82"
+                      required
+                    />
+                    <FormField
+                      label="Unit"
+                      name="unit"
+                      value={unit}
+                      onChange={setUnit}
+                      placeholder="kg, books, km..."
+                    />
+                  </div>
+                )}
               </Disclosure.Body>
             </Disclosure.Content>
           </Disclosure>
@@ -110,7 +157,13 @@ export function GoalCreatePage() {
             variant="primary"
             size="lg"
             fullWidth
-            isDisabled={!title.trim()}
+            isDisabled={
+              !title.trim() ||
+              (progressStrategy === 'METRIC' &&
+                (currentValue === '' || targetValue === '' ||
+                  !Number.isFinite(Number(currentValue)) ||
+                  !Number.isFinite(Number(targetValue))))
+            }
             isPending={submitting}
             onPress={() => void create()}
           >

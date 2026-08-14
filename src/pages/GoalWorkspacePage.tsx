@@ -9,12 +9,15 @@ import {
   Compass,
   Flag,
   Lightbulb,
+  Pencil,
   Sparkles,
   Target,
+  TrendingUp,
 } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ErrorAlert } from '../components/Feedback'
+import { FormField } from '../components/FormField'
 import { GoalMap } from '../components/GoalMap'
 import { ProgressMeter } from '../components/ProgressMeter'
 import { RewardModal } from '../components/RewardModal'
@@ -35,6 +38,8 @@ export function GoalWorkspacePage() {
   const [coach, setCoach] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
+  const [metricValue, setMetricValue] = useState('')
+  const [updatingMetric, setUpdatingMetric] = useState(false)
   const requested = useRef(false)
   const navigate = useNavigate()
   const { refreshUser } = useAuth()
@@ -43,6 +48,7 @@ export function GoalWorkspacePage() {
     try {
       const data = await api<Goal>(`/goals/${id}`)
       setGoal(data)
+      setMetricValue(data.currentValue === null ? '' : String(data.currentValue))
       setError('')
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : 'Unable to load this goal')
@@ -78,6 +84,24 @@ export function GoalWorkspacePage() {
     }
   }
 
+  async function updateMetric() {
+    if (!goal || metricValue === '' || !Number.isFinite(Number(metricValue))) return
+    setUpdatingMetric(true)
+    setError('')
+    try {
+      const updated = await api<Goal>(`/goals/${goal.id}/progress`, {
+        method: 'PATCH',
+        body: JSON.stringify({ currentValue: Number(metricValue) }),
+      })
+      setGoal(updated)
+      setMetricValue(String(updated.currentValue))
+    } catch (requestError) {
+      setError(requestError instanceof Error ? requestError.message : 'Unable to update progress')
+    } finally {
+      setUpdatingMetric(false)
+    }
+  }
+
   if (loading) return <WorkspaceSkeleton />
   if (!goal) {
     return <div className="page"><ErrorAlert message={error || 'Goal not found'} /></div>
@@ -90,9 +114,12 @@ export function GoalWorkspacePage() {
     <div className="page workspace-page">
       <div className="workspace-topbar">
         <Button variant="ghost" onPress={() => navigate('/goals')}><ArrowLeft size={17} /> All goals</Button>
-        <div className="workspace-status">
-          <StatusPill label={goal.health.label} tone={goal.health.tone} />
-          <span>{goal.status.toLowerCase()}</span>
+        <div className="workspace-actions">
+          <Button variant="secondary" onPress={() => navigate(`/goals/${goal.id}/edit-plan`)}><Pencil size={16} /> Edit plan</Button>
+          <div className="workspace-status">
+            <StatusPill label={goal.health.label} tone={goal.health.tone} />
+            <span>{goal.status.toLowerCase()}</span>
+          </div>
         </div>
       </div>
 
@@ -131,6 +158,39 @@ export function GoalWorkspacePage() {
           <AnimatePresence mode="wait">
             <motion.div key="overview" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="workspace-grid">
               <section className="workspace-primary">
+                {goal.progressStrategy === 'METRIC' && (
+                  <Card className="metric-progress-card">
+                    <Card.Header>
+                      <span className="metric-progress-icon"><TrendingUp size={19} /></span>
+                      <div>
+                        <Card.Title>Update measured progress</Card.Title>
+                        <Card.Description>
+                          Started at {String(goal.startValue)} {goal.unit || ''} · target {String(goal.targetValue)} {goal.unit || ''}
+                        </Card.Description>
+                      </div>
+                    </Card.Header>
+                    <Card.Content>
+                      <div className="metric-update-form">
+                        <FormField
+                          label={`Current value${goal.unit ? ` (${goal.unit})` : ''}`}
+                          name="metricValue"
+                          type="number"
+                          value={metricValue}
+                          onChange={setMetricValue}
+                          variant="secondary"
+                        />
+                        <Button
+                          variant="primary"
+                          isPending={updatingMetric}
+                          isDisabled={metricValue === '' || !Number.isFinite(Number(metricValue))}
+                          onPress={() => void updateMetric()}
+                        >
+                          Update progress
+                        </Button>
+                      </div>
+                    </Card.Content>
+                  </Card>
+                )}
                 <Card className="next-action-card">
                   <Card.Header>
                     <div>

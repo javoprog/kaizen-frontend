@@ -47,6 +47,10 @@ export interface Goal {
   planningStatus: 'DRAFT' | 'APPROVED'
   progressStrategy: 'TASKS' | 'METRIC'
   targetDate: string | null
+  startValue: string | number | null
+  currentValue: string | number | null
+  targetValue: string | number | null
+  unit: string | null
   progress: number
   earnedXp: number
   createdAt: string

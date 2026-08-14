@@ -23,7 +23,7 @@ export default function App() {
 
   if (loading) return <LoadingScreen />
   if (!user) return <Suspense fallback={<LoadingScreen label="Opening Kaizen" />}><AuthPage /></Suspense>
-  const isPlanReview = /^\/goals\/[^/]+\/plan$/.test(location.pathname)
+  const isPlanReview = /^\/goals\/[^/]+\/(plan|edit-plan)$/.test(location.pathname)
   if (!user.onboardingCompleted && location.pathname !== '/onboarding' && !isPlanReview) {
     return <Navigate to="/onboarding" replace />
   }
@@ -32,6 +32,7 @@ export default function App() {
       <Routes>
         <Route path="/onboarding" element={<OnboardingPage />} />
         <Route path="/goals/:id/plan" element={<PlanReviewPage />} />
+        <Route path="/goals/:id/edit-plan" element={<PlanReviewPage mode="edit" />} />
         <Route element={<AppShell />}>
           <Route index element={<DashboardPage />} />
           <Route path="goals" element={<GoalsPage />} />
